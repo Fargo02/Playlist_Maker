@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_white"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/small_mark">
+
+
+    <Toolbar
+        style="@style/toolbar_settings">
+    </Toolbar>
+    <FrameLayout
+        android:paddingStart="@dimen/middle_mark"
+        android:paddingTop="@dimen/padding_list"
+        android:paddingBottom="@dimen/padding_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Switch
+            android:text="@string/dark_theme"
+            android:textSize="@dimen/middle_size_text"
+            android:id="@+id/themeSwitcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+    </FrameLayout>
+    <FrameLayout
+        android:paddingStart="@dimen/middle_mark"
+        android:paddingTop="@dimen/padding_list"
+        android:paddingBottom="@dimen/padding_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/share_the_app"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/middle_size_text"
+            android:textFontWeight="500"/>
+        <ImageView
+            style="@style/share_section_settings_image"/>
+    </FrameLayout>
+    <FrameLayout
+        android:paddingStart="@dimen/middle_mark"
+        android:paddingTop="@dimen/padding_list"
+        android:paddingBottom="@dimen/padding_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/write_to_support"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/middle_size_text"
+            android:textFontWeight="500"/>
+        <ImageView
+            style="@style/support_section_settings_image"/>
+
+    </FrameLayout>
+    <FrameLayout
+        android:paddingStart="@dimen/middle_mark"
+        android:paddingTop="@dimen/padding_list"
+        android:paddingBottom="@dimen/padding_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/user_agreement"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/middle_size_text"
+            android:textFontWeight="500"/>
+        <ImageView
+            style="@style/arrow_agreement_section_settings_image"/>
+    </FrameLayout>
+</LinearLayout>

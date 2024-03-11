@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_white">@color/dark_theme</color>
+    <color name="background">@color/dark_theme</color>
+    <color name="text_black">@color/white</color>
+
+    <style name="share_section_settings_image">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/share_dark</item>
+        <item name="android:layout_gravity">end</item>
+    </style>
+
+    <style name="support_section_settings_image">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/support_dark</item>
+        <item name="android:layout_gravity">end</item>
+    </style>
+
+    <style name="arrow_agreement_section_settings_image">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/arrow_agreement_dark</item>
+        <item name="android:layout_gravity">end</item>
+    </style>
+
+    <style name="toolbar_settings">
+        <item name="android:title">@string/settings</item>
+        <item name="android:layout_marginBottom">@dimen/big_margin</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>

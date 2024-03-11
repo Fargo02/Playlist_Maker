@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_white"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/small_mark"
+    android:id="@+id/settings">
+
+    <Toolbar
+        android:id="@+id/settingsBack"
+        style="@style/toolbar_settings"
+        android:foreground="?attr/selectableItemBackground">
+    </Toolbar>
+    <FrameLayout
+        style="@style/section_settings">
+
+        <Switch
+            android:text="@string/dark_theme"
+            android:textSize="@dimen/middle_size_text"
+            android:id="@+id/themeSwitcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+    </FrameLayout>
+
+    <FrameLayout
+        style="@style/section_settings">
+        <TextView
+            style="@style/text_section_settings"
+            android:text="@string/share_the_app" />
+        <ImageView
+            style="@style/share_section_settings_image" />
+    </FrameLayout>
+
+    <FrameLayout
+        style="@style/section_settings">
+
+        <TextView
+            style="@style/text_section_settings"
+            android:text="@string/write_to_support" />
+        <ImageView
+            style="@style/support_section_settings_image"/>
+
+    </FrameLayout>
+    <FrameLayout
+        style="@style/section_settings">
+
+        <TextView
+            style="@style/text_section_settings"
+            android:text="@string/user_agreement" />
+        <ImageView
+            style="@style/arrow_agreement_section_settings_image"/>
+    </FrameLayout>
+</LinearLayout>
