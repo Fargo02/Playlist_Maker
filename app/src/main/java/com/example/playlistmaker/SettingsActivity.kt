@@ -15,14 +15,6 @@ class SettingsActivity : AppCompatActivity() {
 
         val settingsBack = findViewById<Toolbar>(R.id.settingsBack)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.settings, SettingsFragment())
-                    .commit()
-        }
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         settingsBack.setNavigationOnClickListener {
             val displayIntent = Intent(this, MainActivity::class.java)
             startActivity(displayIntent)
