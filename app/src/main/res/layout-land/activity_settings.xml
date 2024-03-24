@@ -9,7 +9,7 @@
 
 
     <Toolbar
-        style="@style/toolbar_settings">
+        style="@style/toolbarSettings">
     </Toolbar>
     <FrameLayout
         android:paddingStart="@dimen/middle_mark"
@@ -42,7 +42,7 @@
             android:textSize="@dimen/middle_size_text"
             android:textFontWeight="500"/>
         <ImageView
-            style="@style/share_section_settings_image"/>
+            style="@style/shareSectionSettingsImage"/>
     </FrameLayout>
     <FrameLayout
         android:paddingStart="@dimen/middle_mark"
@@ -60,7 +60,7 @@
             android:textSize="@dimen/middle_size_text"
             android:textFontWeight="500"/>
         <ImageView
-            style="@style/support_section_settings_image"/>
+            style="@style/supportSectionSettingsImage"/>
 
     </FrameLayout>
     <FrameLayout
@@ -79,6 +79,6 @@
             android:textSize="@dimen/middle_size_text"
             android:textFontWeight="500"/>
         <ImageView
-            style="@style/arrow_agreement_section_settings_image"/>
+            style="@style/arrowAgreementSectionSettingsImage"/>
     </FrameLayout>
 </LinearLayout>

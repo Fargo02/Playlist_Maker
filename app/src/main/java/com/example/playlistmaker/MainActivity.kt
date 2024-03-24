@@ -1,30 +1,26 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
-import java.util.Objects
 
 class MainActivity : AppCompatActivity() {
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val searchButton = findViewById<Button>(R.id.b1)
-        val mediaButton = findViewById<Button>(R.id.b2)
-        val settingsButton = findViewById<Button>(R.id.b3)
+        val searchButton = findViewById<Button>(R.id.firstMainButton)
+        val mediaButton = findViewById<Button>(R.id.secondMainButton)
+        val settingsButton = findViewById<Button>(R.id.thirdMainButton)
 
-        val buttonClickListener: View.OnClickListener = object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                val intent = Intent(this@MainActivity, Search::class.java)
-                startActivity(intent)
-            }
+
+        searchButton.setOnClickListener {
+            val displayIntent = Intent(this, SearchActivity::class.java)
+            startActivity(displayIntent)
         }
-        searchButton.setOnClickListener(buttonClickListener)
 
         mediaButton.setOnClickListener {
             val displayIntent = Intent(this, MediaLibrary::class.java)
@@ -35,5 +31,7 @@ class MainActivity : AppCompatActivity() {
             val displayIntent = Intent(this, SettingsActivity::class.java)
             startActivity(displayIntent)
         }
+
+
     }
 }

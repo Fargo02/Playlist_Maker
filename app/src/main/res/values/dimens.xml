@@ -8,5 +8,4 @@
     <dimen name="clear_mark">0dp</dimen>
     <dimen name="big_margin">24dp</dimen>
     <dimen name="toolbar_and_image_mark">24dp</dimen>
-
 </resources>
