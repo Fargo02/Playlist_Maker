@@ -52,5 +52,10 @@
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:textColorHint">@color/dark</item>
         <item name="android:drawableTint">@color/dark</item>
+        <item name="android:textColor">@color/dark</item>
+    </style>
+
+    <style name="ic_close">
+        <item name="android:tint">@color/dark</item>
     </style>
 </resources>
