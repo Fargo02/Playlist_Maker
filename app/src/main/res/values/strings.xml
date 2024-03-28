@@ -7,6 +7,11 @@
     <string name="search">Поиск</string>
     <string name="media_library">Медиатека</string>
     <string name="settings">Настройки</string>
+    <string name="link_to_the_practicum">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="link_to_the_agreement" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="mail" translatable="false">trenin.0235@gmail.com</string>
+    <string name="title_message_for_developer">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="message_for_developer">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->

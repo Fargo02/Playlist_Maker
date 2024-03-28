@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:background="@color/background_white"
     android:orientation="vertical"
+    android:paddingEnd="@dimen/small_mark"
     android:id="@+id/settings">
 
     <Toolbar
         android:id="@+id/settingsBack"
-        style="@style/toolbar"
-        android:title="@string/settings">
+        style="@style/toolbarSettings"
+        android:foreground="?attr/selectableItemBackground">
     </Toolbar>
-
     <FrameLayout
         style="@style/sectionSettings">
 
@@ -28,37 +28,31 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/shareTheApp"
         style="@style/sectionSettings">
         <TextView
             style="@style/textSectionSettings"
             android:text="@string/share_the_app" />
         <ImageView
-            android:src="@drawable/share"
             style="@style/shareSectionSettingsImage" />
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/writeToSupport"
         style="@style/sectionSettings">
 
         <TextView
             style="@style/textSectionSettings"
             android:text="@string/write_to_support" />
         <ImageView
-            android:src="@drawable/support"
             style="@style/supportSectionSettingsImage"/>
 
     </FrameLayout>
     <FrameLayout
-        android:id="@+id/userAgreement"
         style="@style/sectionSettings">
 
         <TextView
             style="@style/textSectionSettings"
             android:text="@string/user_agreement" />
         <ImageView
-            android:src="@drawable/arrow_agreement"
             style="@style/arrowAgreementSectionSettingsImage"/>
     </FrameLayout>
 </LinearLayout>

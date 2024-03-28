@@ -2,11 +2,17 @@
 <resources>
     <dimen name="big_size_text">22sp</dimen>
     <dimen name="middle_size_text">16sp</dimen>
-    <dimen name="middle_mark">16dp</dimen>
-    <dimen name="small_mark">8dp</dimen>
-    <dimen name="padding_list">21dp</dimen>
+
     <dimen name="clear_mark">0dp</dimen>
+    <dimen name="small_mark">8dp</dimen>
+    <dimen name="middle_mark">16dp</dimen>
+
+    <dimen name="padding_list">21dp</dimen>
+
     <dimen name="big_margin">24dp</dimen>
     <dimen name="toolbar_and_image_mark">24dp</dimen>
 
+    <dimen name="edit_text_padding">10dp</dimen>
+    <dimen name="icon_close_margin">28dp</dimen>
+    <dimen name="icon_search_padding">4dp</dimen>
 </resources>
