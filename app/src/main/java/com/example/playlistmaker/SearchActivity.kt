@@ -31,8 +31,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchBack.setNavigationOnClickListener {
-            val displayIntent = Intent(this, MainActivity::class.java)
-            startActivity(displayIntent)
+            finish()
         }
 
         clearButton.setOnClickListener {
@@ -60,9 +59,6 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
     }
-    companion object {
-        const val EDIT_TEXT = ""
-    }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(EDIT_TEXT, savedText)
@@ -72,10 +68,14 @@ class SearchActivity : AppCompatActivity() {
         savedInstanceState.getString(EDIT_TEXT, savedText)
     }
     private fun clearButtonVisibility(s: CharSequence?): Int {
+
         return if (s.isNullOrEmpty()) {
             View.GONE
         } else {
             View.VISIBLE
         }
+    }
+    companion object {
+        private const val EDIT_TEXT = ""
     }
 }
