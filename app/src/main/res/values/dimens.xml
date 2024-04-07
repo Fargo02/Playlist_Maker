@@ -2,7 +2,7 @@
 <resources>
     <dimen name="big_size_text">22sp</dimen>
     <dimen name="middle_size_text">16sp</dimen>
-
+    <dimen name="small_size_text_11">11sp</dimen>
     <dimen name="clear_mark">0dp</dimen>
     <dimen name="small_mark">8dp</dimen>
     <dimen name="middle_mark">16dp</dimen>
@@ -15,4 +15,9 @@
     <dimen name="edit_text_padding">10dp</dimen>
     <dimen name="icon_close_margin">28dp</dimen>
     <dimen name="icon_search_padding">4dp</dimen>
+
+    <dimen name="mark_12dp">12dp</dimen>
+    <dimen name="mark_6dp">6dp</dimen>
+    <dimen name="mark_20dp">20dp</dimen>
+    <dimen name="mark_13dp">13dp</dimen>
 </resources>

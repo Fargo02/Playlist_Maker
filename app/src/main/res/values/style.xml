@@ -87,4 +87,9 @@
         <item name="android:textColorHint">@color/grey</item>
         <item name="android:drawableTint">@color/grey</item>
     </style>
+    <style name="out_of_size">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
 </resources>    

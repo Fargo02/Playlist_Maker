@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,12 +15,10 @@
         style="@style/toolbar"
         android:layout_marginBottom="@dimen/small_mark"
         android:title="@string/search" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
         <EditText
             android:id="@+id/inputEditText"
             style="@style/search_edit_text"
@@ -40,7 +40,6 @@
             android:padding="@dimen/edit_text_padding"
             android:textSize="@dimen/middle_size_text"
             android:importantForAutofill="no" />
-
         <ImageView
             android:id="@+id/clearIcon"
             style="@style/ic_close"
@@ -54,4 +53,12 @@
             android:visibility="gone"
             android:importantForAccessibility="no" />
     </FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:paddingTop="@dimen/middle_mark"
+        android:id="@+id/tracksList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/track_item"
+        tools:itemCount="11"/>
 </LinearLayout>
