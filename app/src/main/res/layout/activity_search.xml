@@ -20,7 +20,6 @@
     <EditText
         android:id="@+id/inputEditText"
         style="@style/search_edit_text"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/middle_mark"
