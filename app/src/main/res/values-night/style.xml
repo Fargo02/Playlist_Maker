@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_white">@color/dark</color>
+    <color name="background">@color/dark</color>
+    <color name="black">@color/white</color>
+
+    <style name="shareSectionSettingsImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="tint">@color/white</item>
+    </style>
+
+    <style name="supportSectionSettingsImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="tint">@color/white</item>
+        <item name="android:layout_gravity">end</item>
+    </style>
+
+    <style name="arrowAgreementSectionSettingsImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="tint">@color/white</item>
+        <item name="android:layout_gravity">end</item>
+    </style>
+
+    <style name="toolbarSettings">
+        <item name="android:title">@string/settings</item>
+        <item name="android:layout_marginBottom">@dimen/big_margin</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="toolbar">
+        <item name="android:textColor">@color/dark</item>
+        <item name="android:layout_marginBottom">@dimen/big_margin</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:contentInsetStartWithNavigation">0dp</item>
+        <item name="android:titleTextAppearance">@style/toolbal_text</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:navigationIcon">@drawable/white_arrow</item>
+    </style>
+
+    <style name="toolbal_text" parent="@style/Base.TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="search_edit_text">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColorHint">@color/dark</item>
+        <item name="android:drawableTint">@color/dark</item>
+        <item name="android:textColor">@color/dark</item>
+    </style>
+    <style name="ic_close">
+        <item name="android:tint">@color/dark</item>
+    </style>
+    <style name="out_of_size">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="point_of_separation">
+        <item name="android:tint">@color/white</item>
+    </style>
+</resources>
