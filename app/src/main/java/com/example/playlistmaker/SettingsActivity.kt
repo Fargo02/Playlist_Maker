@@ -4,18 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceFragmentCompat
 
 class SettingsActivity : AppCompatActivity() {
-
     @SuppressLint("CutPasteId", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings_activity)
+        setContentView(R.layout.activity_settings)
 
         val settingsBack = findViewById<Toolbar>(R.id.settingsBack)
         val share = findViewById<FrameLayout>(R.id.shareTheApp)
@@ -23,8 +20,7 @@ class SettingsActivity : AppCompatActivity() {
         val userAgreement = findViewById<FrameLayout>(R.id.userAgreement)
 
         settingsBack.setNavigationOnClickListener {
-            val displayIntent = Intent(this, MainActivity::class.java)
-            startActivity(displayIntent)
+            finish()
         }
 
         share.setOnClickListener {
@@ -47,13 +43,6 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(getString(R.string.link_to_the_agreement))
             startActivity(intent)
-        }
-
-    }
-
-    class SettingsFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }
     }
 }

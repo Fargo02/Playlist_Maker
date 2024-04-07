@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_white"
-    android:id="@+id/container"
     android:orientation="vertical">
 
     <Toolbar
-        android:title="@string/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/searchBack"
         style="@style/toolbar"
-        android:layout_marginBottom="@dimen/small_mark">
-    </Toolbar>
+        android:layout_marginBottom="@dimen/small_mark"
+        android:title="@string/search" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <EditText
+            android:id="@+id/inputEditText"
+            style="@style/search_edit_text"
 
     <EditText
         android:id="@+id/inputEditText"
@@ -25,28 +31,43 @@
         android:layout_marginStart="@dimen/middle_mark"
         android:layout_marginEnd="@dimen/middle_mark"
         android:background="@drawable/edit_text"
+              
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/middle_mark"
+            android:layout_marginEnd="@dimen/middle_mark"
+            android:background="@drawable/edit_text"
 
-        android:inputType="text"
-        android:lines="1"
-        android:maxLength="30"
-        android:hint="@string/search"
-        android:textSize="@dimen/middle_size_text"
-        android:fontFamily="@font/ys_display_regular"
+            android:drawableStart="@drawable/search"
+            android:drawablePadding="@dimen/icon_search_padding"
+            android:fontFamily="@font/ys_display_regular"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:lines="1"
 
-        android:drawableStart="@drawable/search"
-        android:padding="@dimen/edit_text_padding"
-        android:drawablePadding="@dimen/icon_search_padding"/>
-
-    <ImageView
-        android:id="@+id/clearIcon"
-        style="@style/ic_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:src="@drawable/ic_close"
-        android:outlineAmbientShadowColor="@color/clear"
-        android:layout_marginEnd="@dimen/icon_close_margin"
-        android:paddingTop="@dimen/edit_text_padding"
-        android:visibility="gone"/>
+            android:maxLength="30"
+            android:padding="@dimen/edit_text_padding"
+            android:textSize="@dimen/middle_size_text"
+            android:importantForAutofill="no" />
+        <ImageView
+            android:id="@+id/clearIcon"
+            style="@style/ic_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/icon_close_margin"
+            android:outlineAmbientShadowColor="@color/clear"
+            android:paddingTop="@dimen/edit_text_padding"
+            android:src="@drawable/ic_close"
+            android:visibility="gone"
+            android:importantForAccessibility="no" />
     </FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:paddingTop="@dimen/middle_mark"
+        android:id="@+id/tracksList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/track_item"
+        tools:itemCount="11"/>
 </LinearLayout>
