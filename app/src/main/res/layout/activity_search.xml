@@ -57,5 +57,5 @@
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/track_item"
-        tools:itemCount="11"/>
+        tools:itemCount="1"/>
 </LinearLayout>
