@@ -24,7 +24,7 @@
    <Button
        android:id="@+id/firstMainButton"
        style="@style/mainBtnLight"
-       android:layout_marginTop="40dp"
+       android:layout_marginTop="20dp"
        android:text="@string/search"
        app:icon="@drawable/main_activity_search"/>
 
