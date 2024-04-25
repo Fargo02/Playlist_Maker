@@ -1,8 +1,6 @@
 package com.example.playlistmaker
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -14,51 +12,73 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toolbar
-import android.app.Activity
+import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var savedText : String
+
+    private val imdbBaseUrl = "https://itunes.apple.com"
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(imdbBaseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val itunesService = retrofit.create(ITunesApi::class.java)
+
+    private lateinit var placeholderMessage: LinearLayout
+    private  lateinit var updateButton: Button
+    private lateinit var textPlaceholder: TextView
+    private lateinit var imagePlaceholder: ImageView
+    private lateinit var inputEditText: EditText
+
+    private val tracks = ArrayList<Track>()
+    private val trackAdapter = TrackAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val trackAdapter = TrackAdapter(
-            listOf(
-                Track("Smells Like Teen Spirit", "Nirvana", "5:01", "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-                Track("Billie Jean", "Michael Jackson", "4:35", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-                Track("Stayin' Alive", "Bee Gees", "4:10", "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"),
-                Track("Whole Lotta Love", "Led Zeppelin", "5:33", "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"),
-                Track("Sweet Child O'Mine", "Guns N' Roses", "5:03", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"),
-                Track("Smells Like Teen Spirit", "Nirvana", "5:01", "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-                Track("Billie Jean", "Michael Jackson", "4:35", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-                Track("Stayin' Alive", "Bee Gees", "4:10", "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"),
-                Track("Smells Like Teen Spirit", "Nirvana", "5:01", "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-                Track("Billie Jean", "Michael Jackson", "4:35", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-                Track("Stayin' Alive", "Bee Gees", "4:10", "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"),
-                Track("Smells Like Teen Spirit", "Nirvana", "5:01", "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-                Track("Billie Jean", "Michael Jackson", "4:35", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-                Track("Stayin' Alive", "Bee Gees", "4:10", "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"),
-                Track("Smells Like Teen Spirit", "Nirvana", "5:01", "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-                Track("Billie Jean", "Michael Jackson", "4:35", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-                Track("Stayin' Alive", "Bee Gees", "4:10", "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"),
-                )
-        )
         val tracksList = findViewById<RecyclerView>(R.id.tracksList)
-        tracksList.adapter = trackAdapter
+
+        trackAdapter.tracks = tracks
         tracksList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        tracksList.adapter = trackAdapter
 
-
-        val inputEditText = findViewById<EditText>(R.id.inputEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
         val searchBack = findViewById<Toolbar>(R.id.searchBack)
 
-        if (savedInstanceState != null) {
-            Log.d("SearchActivity","Hii")
-            savedInstanceState.getString("editTextValue")
+        inputEditText = findViewById(R.id.inputEditText)
+        placeholderMessage = findViewById(R.id.placeholderSearch)
+        updateButton = findViewById(R.id.updateSearch)
+        textPlaceholder = findViewById(R.id.textPlaceholder)
+        imagePlaceholder = findViewById(R.id.imagePlaceholder)
+
+        updateButton.setOnClickListener{
+            placeholderMessage.visibility = View.GONE
+            updateButton.visibility = View.GONE
+            requestToServer()
+        }
+
+        inputEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (inputEditText.text.isNotEmpty()) {
+                    placeholderMessage.visibility = View.GONE
+                    updateButton.visibility = View.GONE
+                    requestToServer()
+                }
+            }
+            false
         }
 
         searchBack.setNavigationOnClickListener {
@@ -69,25 +89,22 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.setText("")
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
+            tracks.clear()
+            trackAdapter.notifyDataSetChanged()
         }
 
         val simpleTextWatcher = object : TextWatcher {
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 savedText = s.toString()
-                clearButton.visibility = clearButtonVisibility(s)
+                clearButton.isVisible = s?.isNotEmpty() == true
             }
 
-            override fun afterTextChanged(s: Editable?) {
-                // empty
-            }
+            override fun afterTextChanged(s: Editable?) { }
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
-
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -97,13 +114,41 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         savedInstanceState.getString(EDIT_TEXT, savedText)
     }
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+    private fun showPlaceholderNothingFound() {
+        placeholderMessage.visibility = View.VISIBLE
+        textPlaceholder.text = getString(R.string.nothing_found)
+        imagePlaceholder.setImageResource(R.drawable.nothing_found)
+        tracks.clear()
+        trackAdapter.notifyDataSetChanged()
+    }
+    private fun showPlaceholderNetwork() {
+        placeholderMessage.visibility = View.VISIBLE
+        updateButton.visibility = View.VISIBLE
+        textPlaceholder.text = getString(R.string.problem_with_network)
+        imagePlaceholder.setImageResource(R.drawable.problem_with_network)
+        tracks.clear()
+        trackAdapter.notifyDataSetChanged()
+    }
+    private fun requestToServer() {
+        itunesService.search(inputEditText.text.toString()).enqueue(object : Callback<TrackResponse> {
+            override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
+                val responseBody = response.body()?.results
+                when (response.code()) {
+                    200 -> {
+                        tracks.clear()
+                        if (responseBody?.isNotEmpty() == true) {
+                            tracks.addAll(responseBody)
+                            trackAdapter.notifyDataSetChanged()
+                        } else
+                            showPlaceholderNothingFound()
+                    }
+                    else -> showPlaceholderNetwork()
+                }
+            }
+            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                showPlaceholderNetwork()
+            }
+        })
     }
     companion object {
         private const val EDIT_TEXT = ""

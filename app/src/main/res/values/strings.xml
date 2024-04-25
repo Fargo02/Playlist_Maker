@@ -13,6 +13,9 @@
     <string name="title_message_for_developer">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="message_for_developer">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="problem_with_network">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="update">Обновить</string>
+    <string name="nothing_found">Ничего не нашлось</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

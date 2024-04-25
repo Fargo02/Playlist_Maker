@@ -63,4 +63,5 @@
     <style name="point_of_separation">
         <item name="android:tint">@color/white</item>
     </style>
+
 </resources>
