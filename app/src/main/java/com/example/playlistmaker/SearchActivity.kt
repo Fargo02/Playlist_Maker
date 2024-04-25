@@ -40,6 +40,7 @@ class SearchActivity : AppCompatActivity() {
     private  lateinit var updateButton: Button
     private lateinit var textPlaceholder: TextView
     private lateinit var imagePlaceholder: ImageView
+    private lateinit var inputEditText: EditText
 
     private val tracks = ArrayList<Track>()
     private val trackAdapter = TrackAdapter()
@@ -54,11 +55,10 @@ class SearchActivity : AppCompatActivity() {
         tracksList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         tracksList.adapter = trackAdapter
 
-
-        val inputEditText = findViewById<EditText>(R.id.inputEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
         val searchBack = findViewById<Toolbar>(R.id.searchBack)
 
+        inputEditText = findViewById(R.id.inputEditText)
         placeholderMessage = findViewById(R.id.placeholderSearch)
         updateButton = findViewById(R.id.updateSearch)
         textPlaceholder = findViewById(R.id.textPlaceholder)
@@ -67,24 +67,7 @@ class SearchActivity : AppCompatActivity() {
         updateButton.setOnClickListener{
             placeholderMessage.visibility = View.GONE
             updateButton.visibility = View.GONE
-            itunesService.search(savedText).enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                    when (response.code()) {
-                        200 -> {
-                            tracks.clear()
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                tracks.addAll(response.body()?.results!!)
-                                trackAdapter.notifyDataSetChanged()
-                            } else
-                                showPlaceholderNothingFound()
-                        }
-                        else -> showPlaceholderNetwork()
-                    }
-                }
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    showPlaceholderNetwork()
-                }
-            })
+            requestToServer()
         }
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -92,24 +75,7 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText.text.isNotEmpty()) {
                     placeholderMessage.visibility = View.GONE
                     updateButton.visibility = View.GONE
-                    itunesService.search(inputEditText.text.toString()).enqueue(object : Callback<TrackResponse> {
-                        override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                            when (response.code()) {
-                                200 -> {
-                                    tracks.clear()
-                                    if (response.body()?.results?.isNotEmpty() == true) {
-                                        tracks.addAll(response.body()?.results!!)
-                                        trackAdapter.notifyDataSetChanged()
-                                    } else
-                                        showPlaceholderNothingFound()
-                                }
-                                else -> showPlaceholderNetwork()
-                            }
-                        }
-                        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                            showPlaceholderNetwork()
-                        }
-                    })
+                    requestToServer()
                 }
             }
             false
@@ -162,6 +128,27 @@ class SearchActivity : AppCompatActivity() {
         imagePlaceholder.setImageResource(R.drawable.problem_with_network)
         tracks.clear()
         trackAdapter.notifyDataSetChanged()
+    }
+    private fun requestToServer() {
+        itunesService.search(inputEditText.text.toString()).enqueue(object : Callback<TrackResponse> {
+            override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
+                val responseBody = response.body()?.results
+                when (response.code()) {
+                    200 -> {
+                        tracks.clear()
+                        if (responseBody?.isNotEmpty() == true) {
+                            tracks.addAll(responseBody)
+                            trackAdapter.notifyDataSetChanged()
+                        } else
+                            showPlaceholderNothingFound()
+                    }
+                    else -> showPlaceholderNetwork()
+                }
+            }
+            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                showPlaceholderNetwork()
+            }
+        })
     }
     companion object {
         private const val EDIT_TEXT = ""
