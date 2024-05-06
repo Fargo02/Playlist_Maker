@@ -80,18 +80,11 @@ class SearchActivity : AppCompatActivity() {
         youSearchText = findViewById(R.id.youSearch)
         imagePlaceholder = findViewById(R.id.imagePlaceholder)
 
-        val heightList = if (searchHistory.getList().size >= 6) {
-            380f
-        } else {
-            (63.3 * searchHistory.getList().size).toFloat()
-        }
-        val px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, heightList, resources.displayMetrics)
 
         inputEditText.setOnFocusChangeListener { _, hasFocus ->
             if (searchHistory.getList().isNotEmpty()) {
                 youSearchText.isVisible = true
                 cleanHistoryButton.isVisible = true
-                tracksList.layoutParams.height = px.roundToInt()
                 tracks.addAll(searchHistory.getList())
             }
         }
@@ -117,7 +110,6 @@ class SearchActivity : AppCompatActivity() {
                     updateButton.isVisible = false
                     youSearchText.isVisible = false
                     cleanHistoryButton.isVisible = false
-                    tracksList.layoutParams.height = RecyclerView.LayoutParams.MATCH_PARENT
                     requestToServer()
                 }
             }
@@ -141,7 +133,6 @@ class SearchActivity : AppCompatActivity() {
             if (searchHistory.getList().isNotEmpty()) {
                 youSearchText.isVisible = true
                 cleanHistoryButton.isVisible = true
-                tracksList.layoutParams.height = px.roundToInt()
             }
             trackAdapter.notifyDataSetChanged()
         }
