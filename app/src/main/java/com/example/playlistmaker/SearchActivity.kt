@@ -1,11 +1,14 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -18,12 +21,15 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.math.roundToInt
 
+const val TRACK_FROM_HISTORY = "historyTrack"
 class SearchActivity : AppCompatActivity() {
     private lateinit var savedText : String
 
@@ -37,20 +43,28 @@ class SearchActivity : AppCompatActivity() {
     private val itunesService = retrofit.create(ITunesApi::class.java)
 
     private lateinit var placeholderMessage: LinearLayout
-    private  lateinit var updateButton: Button
+    private lateinit var updateButton: Button
+    private lateinit var cleanHistoryButton: Button
     private lateinit var textPlaceholder: TextView
+    private lateinit var youSearchText: TextView
     private lateinit var imagePlaceholder: ImageView
     private lateinit var inputEditText: EditText
 
-    private val tracks = ArrayList<Track>()
+    private lateinit var searchHistory: SearchHistory
+
+    private var tracks = ArrayList<Track>()
+
     private val trackAdapter = TrackAdapter()
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val tracksList = findViewById<RecyclerView>(R.id.tracksList)
+        val sharedPreferences = getSharedPreferences(TRACK_FROM_HISTORY, MODE_PRIVATE)
+        searchHistory = SearchHistory(sharedPreferences)
 
+        val tracksList = findViewById<RecyclerView>(R.id.tracksList)
         trackAdapter.tracks = tracks
         tracksList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         tracksList.adapter = trackAdapter
@@ -61,20 +75,41 @@ class SearchActivity : AppCompatActivity() {
         inputEditText = findViewById(R.id.inputEditText)
         placeholderMessage = findViewById(R.id.placeholderSearch)
         updateButton = findViewById(R.id.updateSearch)
+        cleanHistoryButton = findViewById(R.id.cleanHistory)
         textPlaceholder = findViewById(R.id.textPlaceholder)
+        youSearchText = findViewById(R.id.youSearch)
         imagePlaceholder = findViewById(R.id.imagePlaceholder)
 
-        updateButton.setOnClickListener{
-            placeholderMessage.visibility = View.GONE
-            updateButton.visibility = View.GONE
+
+        inputEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (searchHistory.getList().isNotEmpty()) {
+                youSearchText.isVisible = true
+                cleanHistoryButton.isVisible = true
+                tracks.addAll(searchHistory.getList())
+            }
+        }
+
+        updateButton.setOnClickListener {
+            placeholderMessage.isVisible = false
+            updateButton.isVisible = false
             requestToServer()
+        }
+
+        cleanHistoryButton.setOnClickListener {
+            searchHistory.clearHistory()
+            tracks.clear()
+            youSearchText.isVisible = false
+            cleanHistoryButton.isVisible = false
+            trackAdapter.notifyDataSetChanged()
         }
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (inputEditText.text.isNotEmpty()) {
-                    placeholderMessage.visibility = View.GONE
-                    updateButton.visibility = View.GONE
+                    placeholderMessage.isVisible = false
+                    updateButton.isVisible = false
+                    youSearchText.isVisible = false
+                    cleanHistoryButton.isVisible = false
                     requestToServer()
                 }
             }
@@ -85,11 +120,20 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
+        trackAdapter.setOnItemClickListener { track ->
+            searchHistory.addTrack(track)
+        }
+
         clearButton.setOnClickListener {
             inputEditText.setText("")
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
             tracks.clear()
+            tracks.addAll(searchHistory.getList())
+            if (searchHistory.getList().isNotEmpty()) {
+                youSearchText.isVisible = true
+                cleanHistoryButton.isVisible = true
+            }
             trackAdapter.notifyDataSetChanged()
         }
 
@@ -98,8 +142,14 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val checkVisibility = s?.isNotEmpty() == true
+                if (s?.isEmpty() == true) tracks.clear()
                 savedText = s.toString()
-                clearButton.isVisible = s?.isNotEmpty() == true
+                clearButton.isVisible = checkVisibility
+                if (searchHistory.getList().isNotEmpty()) {
+                    cleanHistoryButton.isVisible = checkVisibility
+                    youSearchText.isVisible = checkVisibility
+                }
             }
 
             override fun afterTextChanged(s: Editable?) { }
@@ -115,15 +165,15 @@ class SearchActivity : AppCompatActivity() {
         savedInstanceState.getString(EDIT_TEXT, savedText)
     }
     private fun showPlaceholderNothingFound() {
-        placeholderMessage.visibility = View.VISIBLE
+        placeholderMessage.isVisible = true
         textPlaceholder.text = getString(R.string.nothing_found)
         imagePlaceholder.setImageResource(R.drawable.nothing_found)
         tracks.clear()
         trackAdapter.notifyDataSetChanged()
     }
     private fun showPlaceholderNetwork() {
-        placeholderMessage.visibility = View.VISIBLE
-        updateButton.visibility = View.VISIBLE
+        placeholderMessage.isVisible = true
+        updateButton.isVisible = true
         textPlaceholder.text = getString(R.string.problem_with_network)
         imagePlaceholder.setImageResource(R.drawable.problem_with_network)
         tracks.clear()

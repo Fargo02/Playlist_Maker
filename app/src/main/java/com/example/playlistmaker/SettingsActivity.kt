@@ -4,12 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.CompoundButton
 import android.widget.FrameLayout
+import android.widget.Switch
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
-    @SuppressLint("CutPasteId", "MissingInflatedId")
+    @SuppressLint("CutPasteId", "MissingInflatedId", "UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -18,6 +22,13 @@ class SettingsActivity : AppCompatActivity() {
         val share = findViewById<FrameLayout>(R.id.shareTheApp)
         val writeToSupport = findViewById<FrameLayout>(R.id.writeToSupport)
         val userAgreement = findViewById<FrameLayout>(R.id.userAgreement)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        themeSwitcher.setOnCheckedChangeListener { switcher, isChecked ->
+            (applicationContext as App).switchTheme(isChecked)
+
+        }
+
 
         settingsBack.setNavigationOnClickListener {
             finish()
