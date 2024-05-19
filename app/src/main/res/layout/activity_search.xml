@@ -27,6 +27,7 @@
             android:layout_marginEnd="@dimen/middle_mark"
             android:background="@drawable/edit_text"
             android:drawableStart="@drawable/search"
+            android:textCursorDrawable="@drawable/cursor"
             android:drawablePadding="@dimen/icon_search_padding"
             android:fontFamily="@font/ys_display_regular"
             android:hint="@string/search"

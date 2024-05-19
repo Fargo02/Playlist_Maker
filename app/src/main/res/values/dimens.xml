@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="big_size_text">22sp</dimen>
-    <dimen name="text_19sp">19sp</dimen>
-    <dimen name="middle_size_text">16sp</dimen>
     <dimen name="small_size_text_11">11sp</dimen>
+    <dimen name="text_size_13sp">13sp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>
+    <dimen name="middle_size_text">16sp</dimen>
+    <dimen name="text_19sp">19sp</dimen>
+    <dimen name="big_size_text">22sp</dimen>
+
 
     <dimen name="clear_mark">0dp</dimen>
     <dimen name="small_mark">8dp</dimen>
@@ -21,10 +23,15 @@
 
     <dimen name="mark_4dp">4dp</dimen>
     <dimen name="mark_6dp">6dp</dimen>
+    <dimen name="mark_9dp">9dp</dimen>
     <dimen name="mark_12dp">12dp</dimen>
-    <dimen name="mark_20dp">20dp</dimen>
     <dimen name="mark_13dp">13dp</dimen>
+    <dimen name="mark_20dp">20dp</dimen>
+    <dimen name="mark_26dp">26dp</dimen>
+    <dimen name="mark_30dp">30dp</dimen>
     <dimen name="mark_36dp">36dp</dimen>
+    <dimen name="mark_38dp">38dp</dimen>
+    <dimen name="mark_124dp">124dp</dimen>
 
     <dimen name="margin_for_placeholder_102dp">102dp</dimen>
     <dimen name="radius_btn_54dp">54dp</dimen>
