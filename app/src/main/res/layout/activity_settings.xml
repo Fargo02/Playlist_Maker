@@ -16,6 +16,7 @@
         android:title="@string/settings">
     </Toolbar>
 
+
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:text="@string/dark_theme"
         android:textSize="@dimen/middle_size_text"
@@ -26,6 +27,7 @@
         android:fontFamily="@font/ys_display_regular"
         android:textFontWeight="400"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
+
 
     <FrameLayout
         android:id="@+id/shareTheApp"

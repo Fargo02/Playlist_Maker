@@ -17,14 +17,14 @@
             android:name=".SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".MediaLibrary"
+            android:name=".MediaLibraryActivity"
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".Player"
+            android:name=".PlayerActivity"
             android:exported="false"/>
         <activity
             android:name=".MainActivity"
