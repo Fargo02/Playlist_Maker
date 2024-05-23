@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
@@ -57,7 +58,6 @@ class SearchActivity : AppCompatActivity() {
             binding.cleanHistory.isVisible = false
             tracks = savedTracks
         }
-
         trackAdapter.tracks = tracks
         binding.tracksList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.tracksList.adapter = trackAdapter
@@ -121,6 +121,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.searchBack.setNavigationOnClickListener {
+            Log.d("Track", "$tracks")
             finish()
         }
 
