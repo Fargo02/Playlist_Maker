@@ -163,7 +163,7 @@
         android:id="@+id/progressBar"
         android:layout_width="@dimen/mark_44dp"
         android:layout_height="@dimen/mark_44dp"
-        android:indeterminateTint="@color/background"
+        android:indeterminateTint="@color/blue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

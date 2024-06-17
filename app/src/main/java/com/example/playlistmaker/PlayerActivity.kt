@@ -59,7 +59,7 @@ class PlayerActivity : AppCompatActivity() {
             if (currentTrack.previewUrl != null) {
                 playbackControl()
             } else {
-                showMassage(resources.getString(R.string.playback_error))
+                showMessage(resources.getString(R.string.playback_error))
             }
         }
 
@@ -192,7 +192,7 @@ class PlayerActivity : AppCompatActivity() {
             false
         }
     }
-    private fun showMassage(text : String) {
+    private fun showMessage(text : String) {
         Toast.makeText(this, text,Toast.LENGTH_SHORT).show()
     }
 }
