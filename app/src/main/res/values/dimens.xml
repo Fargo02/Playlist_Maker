@@ -31,6 +31,7 @@
     <dimen name="mark_30dp">30dp</dimen>
     <dimen name="mark_36dp">36dp</dimen>
     <dimen name="mark_38dp">38dp</dimen>
+    <dimen name="mark_44dp">44dp</dimen>
     <dimen name="mark_124dp">124dp</dimen>
 
     <dimen name="margin_for_placeholder_102dp">102dp</dimen>

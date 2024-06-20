@@ -23,6 +23,8 @@
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
+    <string name="playback_error">Ошибка воспроизведения</string>
+    <string name="start_track">00:00</string>
 
 
 
