@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
@@ -9,19 +9,18 @@ import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.SearchActivity.Companion.TRACK_INF
+import com.example.playlistmaker.R
+import com.example.playlistmaker.ui.search.SearchActivity.Companion.TRACK_INF
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
@@ -36,7 +35,7 @@ class PlayerActivity : AppCompatActivity() {
     private var mediaPlayer = MediaPlayer()
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var currentTrack: Track
-    private lateinit var timerThread: Runnable
+    private var timerThread: Runnable? = null
     private var mainThreadHandler: Handler? = null
 
     @SuppressLint("MissingInflatedId")
@@ -51,27 +50,17 @@ class PlayerActivity : AppCompatActivity() {
         val type = object : TypeToken<Track>() {}.type
         currentTrack = Gson().fromJson(track, type) as Track
 
-        if (currentTrack.previewUrl != null) {
-            preparePlayer()
-        }
+        preparePlayer()
 
         binding.buttonPlay.setOnClickListener {
-            if (currentTrack.previewUrl != null) {
-                playbackControl()
-            } else {
-                showMessage(resources.getString(R.string.playback_error))
-            }
+            playbackControl()
         }
 
-
-        val timeFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
-        val firstApiFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        val date = LocalDate.parse(currentTrack.releaseDate , firstApiFormat)
         binding.trackName.text = currentTrack.trackName
         binding.artistName.text = currentTrack.artistName
         binding.playingTime.text = resources.getString(R.string.start_track)
-        binding.trackTime.text = timeFormat.format(currentTrack.trackTimeMillis.toLong())
-        binding.trackYear.text = date.year.toString()
+        binding.trackTime.text = currentTrack.trackTimeMillis
+        binding.trackYear.text = currentTrack.releaseDate
         binding.trackGenre.text = currentTrack.primaryGenreName
         binding.trackCountry.text = currentTrack.country
 
@@ -113,7 +102,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun startTime(){
         timerThread = createUpdateTimerTask()
         mainThreadHandler?.post(
-            timerThread
+            timerThread!!
         )
     }
     private fun createUpdateTimerTask(): Runnable {
@@ -133,7 +122,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mainThreadHandler?.removeCallbacks(timerThread)
+        if (timerThread != null) mainThreadHandler?.removeCallbacks(timerThread!!)
         mediaPlayer.release()
     }
 
@@ -159,7 +148,7 @@ class PlayerActivity : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             binding.buttonPlay.setBackgroundResource(R.drawable.button_play_off)
             binding.playingTime.text = resources.getString(R.string.start_track)
-            mainThreadHandler?.removeCallbacks(timerThread)
+            if (timerThread != null) mainThreadHandler?.removeCallbacks(timerThread!!)
             playerState = STATE_PREPARED
         }
     }
@@ -172,7 +161,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        mainThreadHandler?.removeCallbacks(timerThread)
+        if (timerThread != null) mainThreadHandler?.removeCallbacks(timerThread!!)
         binding.buttonPlay.setBackgroundResource(R.drawable.button_play_off)
         playerState = STATE_PAUSED
     }
