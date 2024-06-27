@@ -14,20 +14,20 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name=".presentation.presenters.search.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.library.MediaLibraryActivity"
+            android:name=".presentation.presenters.library.MediaLibraryActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.settings.SettingsActivity"
+            android:name=".presentation.presenters.settings.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".ui.player.PlayerActivity"
+            android:name=".presentation.presenters.player.PlayerActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".presentation.presenters.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

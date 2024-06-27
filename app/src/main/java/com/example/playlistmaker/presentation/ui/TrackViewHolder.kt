@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.models
+package com.example.playlistmaker.presentation.ui
 
 import android.view.View
 import android.widget.ImageView
@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import java.text.SimpleDateFormat
+import com.example.playlistmaker.domain.models.Track
 import java.util.Locale
 
 class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    private val photoMaker = PhotoMaker()
     private val cover: ImageView = itemView.findViewById(R.id.itemTrackCover)
     private val name: TextView = itemView.findViewById(R.id.itemTrackName)
     private val artist: TextView = itemView.findViewById(R.id.itemArtistName)
@@ -19,11 +20,11 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         name.text = model.trackName
         artist.text = model.artistName
         time.text = model.trackTimeMillis
-        Glide.with(itemView)
-            .load(model.artworkUrl100)
-            .placeholder(R.drawable.placeholder)
-            .fitCenter()
-            .transform(RoundedCorners(2))
-            .into(cover)
+        photoMaker.getPhoto(
+            cover,
+            model.artworkUrl100,
+            R.drawable.placeholder,
+            2
+        )
     }
 }

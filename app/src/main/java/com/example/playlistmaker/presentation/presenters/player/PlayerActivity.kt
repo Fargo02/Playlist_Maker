@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.player
+package com.example.playlistmaker.presentation.presenters.player
 
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
@@ -12,12 +12,16 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.ui.search.SearchActivity.Companion.TRACK_INF
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.presentation.presenters.search.SearchActivity.Companion.TRACK_INF
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.player.PlayerInteractor
+import com.example.playlistmaker.domain.player.PlayerState
+import com.example.playlistmaker.domain.player.PlayerState.*
+import com.example.playlistmaker.presentation.mapper.ArtworkMapper
+import com.example.playlistmaker.presentation.ui.PhotoMaker
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
@@ -31,12 +35,36 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
     }
+    private val photoMaker = PhotoMaker()
     private var playerState = STATE_DEFAULT
-    private var mediaPlayer = MediaPlayer()
+    //private var mediaPlayer = MediaPlayer()
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var currentTrack: Track
     private var timerThread: Runnable? = null
     private var mainThreadHandler: Handler? = null
+    private val listener = object : PlayerInteractor.OnStateChangeListener {
+        override fun onChange(state: PlayerState) {
+            binding.buttonPlay.setOnClickListener {
+                when (state) {
+                    PREPARED -> {
+                        binding.buttonPlay.isEnabled = true
+                        binding.buttonPlay.setBackgroundResource(R.drawable.button_play_off)
+                        binding.playingTime.text = resources.getString(R.string.start_track)
+                        //timerThread?.let { mainThreadHandler?.removeCallbacks(it) }
+                        //startTime()
+                        startPlayer()
+                    }
+                    PLAYING -> {
+                        pausePlayer()
+                    }
+                    PAUSED -> {
+                        //startTime()
+                        startPlayer()
+                    }
+                }
+            }
+        }
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,11 +78,23 @@ class PlayerActivity : AppCompatActivity() {
         val type = object : TypeToken<Track>() {}.type
         currentTrack = Gson().fromJson(track, type) as Track
 
-        preparePlayer()
+        photoMaker.getPhoto(
+            binding.cover,
+            ArtworkMapper.getCoverArtwork(currentTrack.artworkUrl100),
+            R.drawable.big_placeholder,
+            8
+        )
 
-        binding.buttonPlay.setOnClickListener {
-            playbackControl()
-        }
+        Creator.providePlayerInteractor().prepare(
+            currentTrack.previewUrl!!,
+            listener
+        )
+
+//        preparePlayer()
+//
+//        binding.buttonPlay.setOnClickListener {
+//            playbackControl()
+//        }
 
         binding.trackName.text = currentTrack.trackName
         binding.artistName.text = currentTrack.artistName
@@ -74,13 +114,6 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        Glide.with(binding.cover)
-            .load(currentTrack.getCoverArtwork())
-            .placeholder(R.drawable.big_placeholder)
-            .fitCenter()
-            .transform(RoundedCorners(8))
-            .into(binding.cover)
-
         binding.buttonAddToList.setOnClickListener {
             buttonEffect(binding.buttonAddToList)
             if (binding.buttonAddToList.background.constantState == resources.getDrawable(R.drawable.button_add_to_list_off).constantState) {
@@ -98,23 +131,21 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun startTime(){
-        timerThread = createUpdateTimerTask()
-        mainThreadHandler?.post(
-            timerThread!!
-        )
-    }
-    private fun createUpdateTimerTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                val currentTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
-                binding.playingTime.text = currentTime
-                mainThreadHandler?.postDelayed(this, DELAY)
-                Log.i("currentTime","currentTime: $currentTime")
-            }
-        }
-    }
+//
+//    private fun startTime(){
+//        timerThread = createUpdateTimerTask()
+//        timerThread?.let { mainThreadHandler?.post(it) }
+//    }
+////    private fun createUpdateTimerTask(): Runnable {
+////        return object : Runnable {
+////            override fun run() {
+////                val currentTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+////                binding.playingTime.text = currentTime
+////                mainThreadHandler?.postDelayed(this, DELAY)
+////                Log.i("currentTime","currentTime: $currentTime")
+////            }
+////        }
+////    }
     override fun onPause() {
         super.onPause()
         pausePlayer()
@@ -122,8 +153,8 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (timerThread != null) mainThreadHandler?.removeCallbacks(timerThread!!)
-        mediaPlayer.release()
+        timerThread?.let { mainThreadHandler?.removeCallbacks(it) }
+        //mediaPlayer.release()
     }
 
     private fun playbackControl() {
@@ -132,36 +163,36 @@ class PlayerActivity : AppCompatActivity() {
                 pausePlayer()
             }
             STATE_PREPARED, STATE_PAUSED -> {
-                startTime()
+                //startTime()
                 startPlayer()
             }
         }
     }
 
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(currentTrack.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            binding.buttonPlay.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            binding.buttonPlay.setBackgroundResource(R.drawable.button_play_off)
-            binding.playingTime.text = resources.getString(R.string.start_track)
-            if (timerThread != null) mainThreadHandler?.removeCallbacks(timerThread!!)
-            playerState = STATE_PREPARED
-        }
-    }
+//    private fun preparePlayer() {
+//        mediaPlayer.setDataSource(currentTrack.previewUrl)
+//        mediaPlayer.prepareAsync()
+//        mediaPlayer.setOnPreparedListener {
+//            binding.buttonPlay.isEnabled = true
+//            playerState = STATE_PREPARED
+//        }
+//        mediaPlayer.setOnCompletionListener {
+//            binding.buttonPlay.setBackgroundResource(R.drawable.button_play_off)
+//            binding.playingTime.text = resources.getString(R.string.start_track)
+//            timerThread?.let { mainThreadHandler?.removeCallbacks(it) }
+//            playerState = STATE_PREPARED
+//        }
+//    }
 
     private fun startPlayer() {
-        mediaPlayer.start()
+        Creator.providePlayerInteractor().play(listener)
         binding.buttonPlay.setBackgroundResource(R.drawable.button_play_on)
         playerState = STATE_PLAYING
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
-        if (timerThread != null) mainThreadHandler?.removeCallbacks(timerThread!!)
+        Creator.providePlayerInteractor().pause(listener)
+        timerThread?.let { mainThreadHandler?.removeCallbacks(it) }
         binding.buttonPlay.setBackgroundResource(R.drawable.button_play_off)
         playerState = STATE_PAUSED
     }

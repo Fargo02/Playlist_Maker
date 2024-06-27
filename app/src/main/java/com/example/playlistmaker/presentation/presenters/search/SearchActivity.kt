@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search
+package com.example.playlistmaker.presentation.presenters.search
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -12,15 +12,15 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.Creator
-import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.presentation.presenters.player.PlayerActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.data.network.ITunesApi
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.models.TrackAdapter
+import com.example.playlistmaker.presentation.ui.TrackAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Retrofit
@@ -47,6 +47,7 @@ class SearchActivity : AppCompatActivity() {
     private var savedTracks = ArrayList<Track>()
     private val trackAdapter = TrackAdapter()
     private var mainThreadHandler: Handler? = null
+    private var consumerRunnable: Runnable? = null
     private val searchRunnable = Runnable { requestToServer() }
 
     @SuppressLint("MissingInflatedId")
@@ -54,10 +55,6 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-
-
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
@@ -203,12 +200,18 @@ class SearchActivity : AppCompatActivity() {
         binding.textPlaceholder.text = getString(R.string.problem_with_network)
         binding.imagePlaceholder.setImageResource(R.drawable.problem_with_network)
     }
+
+    override fun onDestroy() {
+        consumerRunnable?.let { mainThreadHandler?.removeCallbacks(it) }
+        super.onDestroy()
+    }
     private fun requestToServer() {
         Creator.provideTracksInteractor().searchTracks(
             binding.inputEditText.text.toString(),
             object : TracksInteractor.TracksConsumer {
                 override fun consume(foundMovies: List<Track>) {
-                    mainThreadHandler?.post{
+                    consumerRunnable?.let { mainThreadHandler?.removeCallbacks(it) }
+                    val runnable = Runnable {
                         binding.progressBar.isVisible = false
                         if (foundMovies.isNotEmpty()) {
                             tracks.addAll(foundMovies)
@@ -218,6 +221,8 @@ class SearchActivity : AppCompatActivity() {
                             showPlaceholderNothingFound()
                         }
                     }
+                    consumerRunnable = runnable
+                    mainThreadHandler?.post(runnable)
                 }
             }
         )

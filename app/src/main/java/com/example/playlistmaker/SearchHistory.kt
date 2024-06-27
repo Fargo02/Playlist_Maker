@@ -2,7 +2,7 @@ package com.example.playlistmaker
 
 import android.content.SharedPreferences
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.search.TRACK_FROM_HISTORY
+import com.example.playlistmaker.presentation.presenters.search.TRACK_FROM_HISTORY
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 private const val HISTORY_SIZE = 10
