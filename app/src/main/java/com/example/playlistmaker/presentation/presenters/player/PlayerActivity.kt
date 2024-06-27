@@ -30,14 +30,8 @@ import java.util.Locale
 class PlayerActivity : AppCompatActivity() {
     companion object{
         private const val DELAY = 400L
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
     }
     private val photoMaker = PhotoMaker()
-    private var playerState = STATE_DEFAULT
-    //private var mediaPlayer = MediaPlayer()
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var currentTrack: Track
     private var timerThread: Runnable? = null
@@ -90,12 +84,6 @@ class PlayerActivity : AppCompatActivity() {
             listener
         )
 
-//        preparePlayer()
-//
-//        binding.buttonPlay.setOnClickListener {
-//            playbackControl()
-//        }
-
         binding.trackName.text = currentTrack.trackName
         binding.artistName.text = currentTrack.artistName
         binding.playingTime.text = resources.getString(R.string.start_track)
@@ -131,7 +119,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
     }
-//
+
 //    private fun startTime(){
 //        timerThread = createUpdateTimerTask()
 //        timerThread?.let { mainThreadHandler?.post(it) }
@@ -157,18 +145,6 @@ class PlayerActivity : AppCompatActivity() {
         //mediaPlayer.release()
     }
 
-    private fun playbackControl() {
-        when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                //startTime()
-                startPlayer()
-            }
-        }
-    }
-
 //    private fun preparePlayer() {
 //        mediaPlayer.setDataSource(currentTrack.previewUrl)
 //        mediaPlayer.prepareAsync()
@@ -187,14 +163,12 @@ class PlayerActivity : AppCompatActivity() {
     private fun startPlayer() {
         Creator.providePlayerInteractor().play(listener)
         binding.buttonPlay.setBackgroundResource(R.drawable.button_play_on)
-        playerState = STATE_PLAYING
     }
 
     private fun pausePlayer() {
         Creator.providePlayerInteractor().pause(listener)
         timerThread?.let { mainThreadHandler?.removeCallbacks(it) }
         binding.buttonPlay.setBackgroundResource(R.drawable.button_play_off)
-        playerState = STATE_PAUSED
     }
     @SuppressLint("ClickableViewAccessibility")
     private fun buttonEffect(button: View) {
@@ -211,8 +185,5 @@ class PlayerActivity : AppCompatActivity() {
             }
             false
         }
-    }
-    private fun showMessage(text : String) {
-        Toast.makeText(this, text,Toast.LENGTH_SHORT).show()
     }
 }
