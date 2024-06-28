@@ -28,15 +28,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val TRACK_FROM_HISTORY = "historyTrack"
 class SearchActivity : AppCompatActivity() {
-
-    private val imdbBaseUrl = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(imdbBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val itunesService = retrofit.create(ITunesApi::class.java)
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 1200L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val EMPTY_STRING = ""
+        const val TRACK_INF = "trackInf"
+    }
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var searchHistory: SearchHistory
@@ -226,32 +223,5 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         )
-//        itunesService.searchTrack(binding.inputEditText.text.toString()).enqueue(object : Callback<TracksSearchResponse> {
-//            override fun onResponse(call: Call<TracksSearchResponse>, response: Response<TracksSearchResponse>) {
-//                val responseBody = response.body()?.results
-//                binding.progressBar.isVisible = false
-//                when (response.code()) {
-//                    200 -> {
-//                        tracks.clear()
-//                        if (responseBody?.isNotEmpty() == true) {
-//                            tracks.addAll(responseBody)
-//                            savedTracks = tracks
-//                            trackAdapter.notifyDataSetChanged()
-//                        } else
-//                            showPlaceholderNothingFound()
-//                    }
-//                    else -> showPlaceholderNetwork()
-//                }
-//            }
-//            override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
-//                showPlaceholderNetwork()
-//            }
-//        })
-    }
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 1200L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val EMPTY_STRING = ""
-        const val TRACK_INF = "trackInf"
     }
 }

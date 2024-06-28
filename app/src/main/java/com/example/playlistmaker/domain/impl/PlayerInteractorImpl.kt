@@ -18,4 +18,16 @@ class PlayerInteractorImpl(
         playerRepository.pause(listener)
     }
 
+    override fun createUpdateTimerTask(): String {
+        return playerRepository.createUpdateTimerTask()
+    }
+
+    override fun release() {
+        playerRepository.release()
+    }
+
+    override fun isPlaying(): Boolean {
+        return playerRepository.isPlaying()
+    }
+
 }

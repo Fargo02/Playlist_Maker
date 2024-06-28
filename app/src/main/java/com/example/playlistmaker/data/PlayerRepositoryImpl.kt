@@ -2,10 +2,11 @@ package com.example.playlistmaker.data
 
 import android.media.MediaPlayer
 import android.util.Log
-import android.widget.Toast
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.domain.player.PlayerState
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PlayerRepositoryImpl(): PlayerRepository{
     private var mediaPlayer = MediaPlayer()
@@ -35,4 +36,19 @@ class PlayerRepositoryImpl(): PlayerRepository{
         mediaPlayer.pause()
         listener.onChange(PlayerState.PAUSED)
     }
+
+    override fun createUpdateTimerTask(): String {
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+    }
+
+    override fun release() {
+        Log.i("mediaPlayer", "released")
+        mediaPlayer.release()
+    }
+
+    override fun isPlaying(): Boolean {
+        Log.i("mediaPlayer", "playing")
+        return mediaPlayer.isPlaying
+    }
+
 }
