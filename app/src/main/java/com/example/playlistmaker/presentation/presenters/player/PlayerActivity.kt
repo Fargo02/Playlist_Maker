@@ -2,14 +2,12 @@ package com.example.playlistmaker.presentation.presenters.player
 
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.playlistmaker.R
@@ -21,18 +19,16 @@ import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerState.*
 import com.example.playlistmaker.presentation.mapper.ArtworkMapper
-import com.example.playlistmaker.presentation.ui.PhotoMaker
+import com.example.playlistmaker.presentation.ui.ImageMaker
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     companion object{
         private const val DELAY = 400L
     }
 
-    private val photoMaker = PhotoMaker()
+    private val ImageMaker = ImageMaker()
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var currentTrack: Track
     private var timerThread: Runnable? = null
@@ -73,7 +69,7 @@ class PlayerActivity : AppCompatActivity() {
         val type = object : TypeToken<Track>() {}.type
         currentTrack = Gson().fromJson(track, type) as Track
 
-        photoMaker.getPhoto(
+        ImageMaker.getPhoto(
             binding.cover,
             ArtworkMapper.getCoverArtwork(currentTrack.artworkUrl100),
             R.drawable.big_placeholder,
