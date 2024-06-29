@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.presenters.search
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,29 +10,30 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
-import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.presentation.presenters.player.PlayerActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.data.network.ITunesApi
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.ui.TrackAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 const val TRACK_FROM_HISTORY = "historyTrack"
 class SearchActivity : AppCompatActivity() {
-
-    private val imdbBaseUrl = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(imdbBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val itunesService = retrofit.create(ITunesApi::class.java)
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 1200L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val EMPTY_STRING = ""
+        const val TRACK_INF = "trackInf"
+    }
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var searchHistory: SearchHistory
@@ -43,6 +44,7 @@ class SearchActivity : AppCompatActivity() {
     private var savedTracks = ArrayList<Track>()
     private val trackAdapter = TrackAdapter()
     private var mainThreadHandler: Handler? = null
+    private var consumerRunnable: Runnable? = null
     private val searchRunnable = Runnable { requestToServer() }
 
     @SuppressLint("MissingInflatedId")
@@ -70,7 +72,7 @@ class SearchActivity : AppCompatActivity() {
         binding.tracksList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.tracksList.adapter = trackAdapter
 
-        if (clickDebounce()) {
+        clickDebounce().also {
             trackAdapter.setOnItemClickListener { track ->
                 val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
                 inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
@@ -195,33 +197,31 @@ class SearchActivity : AppCompatActivity() {
         binding.textPlaceholder.text = getString(R.string.problem_with_network)
         binding.imagePlaceholder.setImageResource(R.drawable.problem_with_network)
     }
+
+    override fun onDestroy() {
+        consumerRunnable?.let { mainThreadHandler?.removeCallbacks(it) }
+        super.onDestroy()
+    }
     private fun requestToServer() {
-        itunesService.search(binding.inputEditText.text.toString()).enqueue(object : Callback<TrackResponse> {
-            override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                val responseBody = response.body()?.results
-                binding.progressBar.isVisible = false
-                when (response.code()) {
-                    200 -> {
-                        tracks.clear()
-                        if (responseBody?.isNotEmpty() == true) {
-                            tracks.addAll(responseBody)
+        Creator.provideTracksInteractor().searchTracks(
+            binding.inputEditText.text.toString(),
+            object : TracksInteractor.TracksConsumer {
+                override fun consume(foundMovies: List<Track>) {
+                    consumerRunnable?.let { mainThreadHandler?.removeCallbacks(it) }
+                    val runnable = Runnable {
+                        binding.progressBar.isVisible = false
+                        if (foundMovies.isNotEmpty()) {
+                            tracks.addAll(foundMovies)
                             savedTracks = tracks
                             trackAdapter.notifyDataSetChanged()
-                        } else
+                        } else {
                             showPlaceholderNothingFound()
+                        }
                     }
-                    else -> showPlaceholderNetwork()
+                    consumerRunnable = runnable
+                    mainThreadHandler?.post(runnable)
                 }
             }
-            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                showPlaceholderNetwork()
-            }
-        })
-    }
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 1200L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val EMPTY_STRING = ""
-        const val TRACK_INF = "trackInf"
+        )
     }
 }
