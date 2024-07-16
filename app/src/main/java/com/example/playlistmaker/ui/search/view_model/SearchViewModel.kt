@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.search.view_model
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
@@ -16,24 +18,39 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.domain.sharing.history.SharingHistoryTrackInteractor
 import com.example.playlistmaker.utils.Creator
 
 class SearchViewModel(
-    sharedPreferences : SharedPreferences,
-    application: Application): AndroidViewModel(application) {
+    private val sharedInteractor : SharingHistoryTrackInteractor,
+    private val searchInteractor: TracksInteractor
+): ViewModel() {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
 
-        fun factory(sharedPreferences : SharedPreferences) = viewModelFactory {
+        fun factory(sharedPreferences : SharedPreferences, context : Context) = viewModelFactory {
             initializer {
-                SearchViewModel(sharedPreferences, this[APPLICATION_KEY] as Application)
+                SearchViewModel(
+                    Creator.provideSharedInteractor(sharedPreferences),
+                    Creator.provideTracksInteractor(context)
+                )
             }
         }
     }
-    val sharedInteractor = Creator.provideSharedInteractor(sharedPreferences)
-    private val searchInteractor = Creator.provideTracksInteractor(application)
+
+    fun getList(): List<Track> {
+        return sharedInteractor.getList()
+    }
+
+    fun addTrack(track: Track) {
+        sharedInteractor.addTrack(track)
+    }
+
+    fun clearHistory() {
+        sharedInteractor.clearHistory()
+    }
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -60,6 +77,8 @@ class SearchViewModel(
             postTime,
         )
     }
+
+
 
     override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)

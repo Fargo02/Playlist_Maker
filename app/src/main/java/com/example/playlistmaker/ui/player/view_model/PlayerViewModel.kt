@@ -11,42 +11,49 @@ import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerState.*
 import com.example.playlistmaker.utils.Creator
 
-class PlayerViewModel(url: String): ViewModel() {
+class PlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    url: String
+): ViewModel() {
 
-    var listener:  PlayerInteractor.OnStateChangeListener
-
-    companion object {
-        fun factory(url: String) = viewModelFactory {
-            initializer {
-                PlayerViewModel(url)
+    var listener = object : PlayerInteractor.OnStateChangeListener {
+        override fun onChange(state: PlayerState) {
+            stateListener.postValue(state)
+            when (state) {
+                PREPARED -> {
+                    playerInteractor.play()
+                }
+                PLAYING -> {
+                    playerInteractor.play()
+                }
+                PAUSED -> {
+                    playerInteractor.pause()
+                }
+                DEFAULT -> Log.i("playerState", "$state")
             }
         }
     }
 
-    val playerInteractor = Creator.providePlayerInteractor()
-
-    init {
-        listener = object : PlayerInteractor.OnStateChangeListener {
-            override fun onChange(state: PlayerState) {
-                stateListener.postValue(state)
-                when (state) {
-                    PREPARED -> {
-                        playerInteractor.play()
-                    }
-                    PLAYING -> {
-                        playerInteractor.play()
-                    }
-                    PAUSED -> {
-                        playerInteractor.pause()
-                    }
-                    DEFAULT -> Log.i("playerState", "$state")
-                }
+    companion object {
+        fun factory(url: String) = viewModelFactory {
+            initializer {
+                PlayerViewModel(Creator.providePlayerInteractor(), url)
             }
         }
+    }
+
+    init {
+
         playerInteractor.prepare(url, listener)
     }
 
     private val stateListener = MutableLiveData<PlayerState>()
     fun observeStateListener(): LiveData<PlayerState> = stateListener
 
+    fun getCurrentTime(): String {
+        return playerInteractor.getCurrentTime()
+    }
+    fun getRelease() {
+        playerInteractor.release()
+    }
 }

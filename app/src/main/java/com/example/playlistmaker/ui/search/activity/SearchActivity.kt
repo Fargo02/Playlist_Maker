@@ -8,21 +8,16 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.utils.Creator
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.ui.search.view_model.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
-import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.ui.ui.TrackAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -31,14 +26,14 @@ const val TRACK_FROM_HISTORY = "historyTrack"
 
 class SearchActivity : AppCompatActivity() {
 
-    private val viewModel by viewModels<SearchViewModel>{
-        SearchViewModel.factory(getSharedPreferences(TRACK_FROM_HISTORY, MODE_PRIVATE))
-    }
-
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val EMPTY_STRING = ""
         const val TRACK_INF = "trackInf"
+    }
+
+    private val viewModel by viewModels<SearchViewModel> {
+        SearchViewModel.factory(getSharedPreferences(TRACK_FROM_HISTORY, MODE_PRIVATE), this)
     }
 
     private lateinit var binding: ActivitySearchBinding
@@ -79,16 +74,16 @@ class SearchActivity : AppCompatActivity() {
             trackAdapter.setOnItemClickListener { track ->
                 val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
                 inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
-                if (viewModel.sharedInteractor.getList() == tracks) {
+                if (viewModel.getList() == tracks) {
                     val position = tracks.indexOf(track)
                     tracks.remove(track)
                     tracks.add(0, track)
                     trackAdapter.notifyItemRemoved(position)
                     trackAdapter.notifyItemInserted(0)
                     trackAdapter.notifyItemRangeChanged(0, tracks.size)
-                    viewModel.sharedInteractor.addTrack(track)
+                    viewModel.addTrack(track)
                 } else {
-                    viewModel.sharedInteractor.addTrack(track)
+                    viewModel.addTrack(track)
                 }
                 val json = Gson().toJson(track)
                 val playerIntent = Intent(this, PlayerActivity::class.java)
@@ -108,7 +103,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.cleanHistory.setOnClickListener {
-            viewModel.sharedInteractor.clearHistory()
+            viewModel.clearHistory()
             tracks.clear()
             binding.youSearch.isVisible = false
             binding.cleanHistory.isVisible = false
@@ -116,10 +111,10 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.inputEditText.setOnFocusChangeListener { _, _ ->
-            if ((viewModel.sharedInteractor.getList().isNotEmpty() && savedText == "")) {
+            if ((viewModel.getList().isNotEmpty() && savedText == "")) {
                 binding.youSearch.isVisible = true
                 binding.cleanHistory.isVisible = true
-                tracks.addAll(viewModel.sharedInteractor.getList())
+                tracks.addAll(viewModel.getList())
                 trackAdapter.notifyDataSetChanged()
             }
         }
@@ -162,9 +157,11 @@ class SearchActivity : AppCompatActivity() {
                         changedText = s?.toString() ?: ""
                     )
                 }
-                if (viewModel.sharedInteractor.getList().isNotEmpty() && savedText == "") {
-                    binding.cleanHistory.isVisible = checkVisibility
-                    binding.youSearch.isVisible = checkVisibility
+                if (viewModel.getList().isNotEmpty() && savedText == "") {
+                    binding.cleanHistory.isVisible = !checkVisibility
+                    binding.youSearch.isVisible = !checkVisibility
+                    tracks.addAll(viewModel.getList())
+                    trackAdapter.notifyDataSetChanged()
                 }
             }
 

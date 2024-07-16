@@ -139,7 +139,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun createUpdateTimerTask(): Runnable {
         return object : Runnable {
             override fun run() {
-                val currentTime = viewModel.playerInteractor.getCurrentTime()
+                val currentTime = viewModel.getCurrentTime()
                 binding.playingTime.text = currentTime
                 mainThreadHandler?.postDelayed(this, DELAY)
                 Log.i("currentTime","currentTime: $currentTime")
@@ -150,7 +150,7 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         timerThread?.let { mainThreadHandler?.removeCallbacks(it) }
-        viewModel.playerInteractor.release()
+        viewModel.getRelease()
     }
 
     override fun onPause() {

@@ -47,6 +47,6 @@ object Creator {
         return ExternalNavigatorImpl(context)
     }
     fun provideSharingSettingsInteractor(context: Context): SharingSettingsInteractor {
-        return SharingSettingsInteractorImpl(context, getSettingsRepository(context))
+        return SharingSettingsInteractorImpl(getSettingsRepository(context))
     }
 }

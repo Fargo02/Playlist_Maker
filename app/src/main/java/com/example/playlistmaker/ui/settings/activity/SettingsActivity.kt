@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.R
 import com.example.playlistmaker.data.settings.App
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.domain.sharing.model.EmailData
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 
 const val KEY_NIGHT_MODE = "nightMode"
@@ -13,7 +15,9 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
 
-    private val viewModel by viewModels<SettingsViewModel>()
+    private val viewModel by viewModels<SettingsViewModel>{
+        SettingsViewModel.factory(application)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,16 +43,31 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.shareTheApp.setOnClickListener {
-            viewModel.sharingSettingsInteractor.shareApp()
+            viewModel.getShareTheApp(getShareAppLink())
         }
 
         binding.writeToSupport.setOnClickListener {
-            viewModel.sharingSettingsInteractor.openSupport()
+            viewModel.getWriteToSupport(getSupportEmailData())
 
         }
 
         binding.userAgreement.setOnClickListener {
-            viewModel.sharingSettingsInteractor.openTerms()
+            viewModel.getUserAgreement(getTermsLink())
         }
+    }
+    private fun getShareAppLink(): String {
+        return getString(R.string.link_to_the_practicum)
+    }
+
+    private fun getSupportEmailData(): EmailData {
+        return EmailData(
+            address = getString(R.string.mail),
+            subject = getString(R.string.title_message_for_developer),
+            text = getString(R.string.message_for_developer)
+        )
+    }
+
+    private fun getTermsLink(): String {
+        return getString(R.string.link_to_the_agreement)
     }
 }
