@@ -16,6 +16,7 @@ import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.ui.search.GetTrackListModel
 import com.example.playlistmaker.ui.search.view_model.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.ui.TrackAdapter
@@ -70,30 +71,28 @@ class SearchActivity : AppCompatActivity() {
         binding.tracksList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.tracksList.adapter = trackAdapter
 
+        viewModel.observeOnTrackClicked().observe(this) {
+            removeAndPutTrack(it)
+        }
+
+        viewModel.observeState().observe(this) {
+            render(it)
+        }
+
+        viewModel.observeGetTrackList().observe(this) {
+            updateTrackList(it)
+        }
+
         clickDebounce().also {
             trackAdapter.setOnItemClickListener { track ->
+                viewModel.updateTrack(track, tracks)
                 val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
                 inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
-                if (viewModel.getList() == tracks) {
-                    val position = tracks.indexOf(track)
-                    tracks.remove(track)
-                    tracks.add(0, track)
-                    trackAdapter.notifyItemRemoved(position)
-                    trackAdapter.notifyItemInserted(0)
-                    trackAdapter.notifyItemRangeChanged(0, tracks.size)
-                    viewModel.addTrack(track)
-                } else {
-                    viewModel.addTrack(track)
-                }
                 val json = Gson().toJson(track)
                 val playerIntent = Intent(this, PlayerActivity::class.java)
                 playerIntent.putExtra(TRACK_INF, json)
                 startActivity(playerIntent)
             }
-        }
-
-        viewModel.observeState().observe(this) {
-            render(it)
         }
 
         binding.updateSearch.setOnClickListener {
@@ -111,12 +110,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.inputEditText.setOnFocusChangeListener { _, _ ->
-            if ((viewModel.getList().isNotEmpty() && savedText == "")) {
-                binding.youSearch.isVisible = true
-                binding.cleanHistory.isVisible = true
-                tracks.addAll(viewModel.getList())
-                trackAdapter.notifyDataSetChanged()
-            }
+            viewModel.getTrackFromSharedPreferences(true, savedText)
         }
 
         binding.searchBack.setNavigationOnClickListener {
@@ -157,18 +151,14 @@ class SearchActivity : AppCompatActivity() {
                         changedText = s?.toString() ?: ""
                     )
                 }
-                if (viewModel.getList().isNotEmpty() && savedText == "") {
-                    binding.cleanHistory.isVisible = !checkVisibility
-                    binding.youSearch.isVisible = !checkVisibility
-                    tracks.addAll(viewModel.getList())
-                    trackAdapter.notifyDataSetChanged()
-                }
+                viewModel.getTrackFromSharedPreferences(!checkVisibility, savedText)
             }
 
             override fun afterTextChanged(s: Editable?) { }
         }
         simpleTextWatcher.let { binding.inputEditText.addTextChangedListener(it) }
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(EMPTY_STRING, savedText)
@@ -179,6 +169,19 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         savedInstanceState.getString(EMPTY_STRING, savedText)
+    }
+
+    private fun updateTrackList(trackListData: GetTrackListModel){
+        binding.cleanHistory.isVisible = trackListData.isVisible
+        binding.youSearch.isVisible = trackListData.isVisible
+        tracks.addAll(trackListData.trackList)
+        trackAdapter.notifyDataSetChanged()
+    }
+
+    private fun removeAndPutTrack(track: Track) {
+        tracks.remove(track)
+        tracks.add(0, track)
+        trackAdapter.notifyDataSetChanged()
     }
 
     private fun showLoading() {
@@ -213,7 +216,6 @@ class SearchActivity : AppCompatActivity() {
         binding.textPlaceholder.text = getString(R.string.nothing_found)
         binding.imagePlaceholder.setImageResource(R.drawable.nothing_found)
     }
-
 
     private fun render(state: SearchState) {
         when (state) {
