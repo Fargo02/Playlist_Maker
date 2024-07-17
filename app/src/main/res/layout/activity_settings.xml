@@ -17,20 +17,17 @@
     </Toolbar>
 
 
-    <Switch
-        android:id="@+id/themeSwitcher"
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:text="@string/dark_theme"
         android:textSize="@dimen/middle_size_text"
         android:paddingStart="@dimen/middle_mark"
-        android:paddingTop="@dimen/padding_list"
-        android:paddingBottom="@dimen/padding_list"
+        android:id="@+id/themeSwitcher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ys_display_regular"
         android:textFontWeight="400"
-        android:thumbTint="@color/blue"
-        android:trackTint="@color/blue_light"
-        tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml" />
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
 
     <FrameLayout
         android:id="@+id/shareTheApp"
