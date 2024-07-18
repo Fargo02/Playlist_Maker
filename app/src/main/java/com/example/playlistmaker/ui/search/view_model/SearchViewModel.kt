@@ -1,28 +1,21 @@
 package com.example.playlistmaker.ui.search.view_model
 
-import android.app.Application
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
-import androidx.core.view.isVisible
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.transition.Visibility
-import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.domain.sharing.history.SharingHistoryTrackInteractor
 import com.example.playlistmaker.ui.search.GetTrackListModel
-import com.example.playlistmaker.ui.settings.view_model.SingleLiveEvent
 import com.example.playlistmaker.utils.Creator
 
 class SearchViewModel(
@@ -65,7 +58,6 @@ class SearchViewModel(
 
     private var latestSearchText: String? = null
 
-
     fun updateTrack(track: Track, tracksList: List<Track>) {
         if (sharedInteractor.getList() == tracksList) {
             onTrackClicked.postValue(track)
@@ -80,7 +72,9 @@ class SearchViewModel(
     }
 
     fun searchDebounce(changedText: String) {
-        if (latestSearchText == changedText) {
+
+        if (latestSearchText == changedText || changedText == "") {
+            handler.removeCallbacksAndMessages(null)
             return
         }
 
@@ -100,6 +94,7 @@ class SearchViewModel(
 
     override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        super.onCleared()
     }
 
     private fun requestToServer(newSearchText: String) {

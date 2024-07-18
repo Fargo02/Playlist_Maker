@@ -143,14 +143,12 @@ class SearchActivity : AppCompatActivity() {
                 binding.cleanHistory.isVisible = false
                 binding.clearIcon.isVisible = checkVisibility
                 binding.progressBar.isVisible = checkVisibility
-                if (!checkVisibility) {
-                    tracks.clear()
-                } else {
-                    tracks.clear()
-                    viewModel.searchDebounce(
-                        changedText = s?.toString() ?: ""
-                    )
-                }
+
+                tracks.clear()
+                viewModel.searchDebounce(
+                    changedText = s?.toString() ?: ""
+                )
+
                 viewModel.getTrackFromSharedPreferences(!checkVisibility, savedText)
             }
 
