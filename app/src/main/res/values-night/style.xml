@@ -11,6 +11,11 @@
         <item name="tint">@color/white</item>
     </style>
 
+    <style name="switchSettings">
+        <item name="android:thumbTint">@color/blue</item>
+        <item name="android:trackTint">@color/blue_light</item>
+    </style>
+
     <style name="supportSectionSettingsImage">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
