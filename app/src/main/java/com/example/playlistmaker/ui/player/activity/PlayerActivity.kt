@@ -19,6 +19,8 @@ import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.ui.ui.ImageMaker
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -35,14 +37,19 @@ class PlayerActivity : AppCompatActivity() {
     private var timerThread: Runnable? = null
     private var mainThreadHandler: Handler? = null
 
-    private val viewModel by viewModels<PlayerViewModel>{
-        PlayerViewModel.factory(currentTrack.previewUrl!!)
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(currentTrack.previewUrl)
     }
 
     private lateinit var playerState: PlayerState
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val track = intent.getStringExtra(TRACK_INF)
+        val type = object : TypeToken<Track>() {}.type
+        currentTrack = Gson().fromJson(track, type) as Track
+
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -50,10 +57,6 @@ class PlayerActivity : AppCompatActivity() {
         mainThreadHandler = Handler(Looper.getMainLooper())
 
         binding.buttonPlay.isEnabled = false
-
-        val track = intent.getStringExtra(TRACK_INF)
-        val type = object : TypeToken<Track>() {}.type
-        currentTrack = Gson().fromJson(track, type) as Track
 
         imageMaker.getPhoto(
             binding.cover,

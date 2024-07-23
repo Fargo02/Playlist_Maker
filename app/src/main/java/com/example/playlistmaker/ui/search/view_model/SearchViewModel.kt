@@ -1,8 +1,6 @@
 package com.example.playlistmaker.ui.search.view_model
 
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -10,13 +8,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.domain.sharing.history.SharingHistoryTrackInteractor
 import com.example.playlistmaker.ui.search.GetTrackListModel
-import com.example.playlistmaker.utils.Creator
 
 class SearchViewModel(
     private val sharedInteractor : SharingHistoryTrackInteractor,
@@ -26,16 +21,11 @@ class SearchViewModel(
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun factory(sharedPreferences : SharedPreferences, context : Context) = viewModelFactory {
-            initializer {
-                SearchViewModel(
-                    Creator.provideSharedInteractor(sharedPreferences),
-                    Creator.provideTracksInteractor(context)
-                )
-            }
-        }
     }
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    private var latestSearchText: String? = null
 
     private val getTrackList = MutableLiveData<GetTrackListModel>()
     fun observeGetTrackList(): LiveData<GetTrackListModel> = getTrackList
@@ -53,10 +43,6 @@ class SearchViewModel(
             Log.i("ErrorGetTrack", "Ошибка")
         }
     }
-
-    private val handler = Handler(Looper.getMainLooper())
-
-    private var latestSearchText: String? = null
 
     fun updateTrack(track: Track, tracksList: List<Track>) {
         if (sharedInteractor.getList() == tracksList) {

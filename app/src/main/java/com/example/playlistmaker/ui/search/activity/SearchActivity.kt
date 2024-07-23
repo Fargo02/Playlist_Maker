@@ -22,8 +22,8 @@ import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.ui.TrackAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-
-const val TRACK_FROM_HISTORY = "historyTrack"
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class SearchActivity : AppCompatActivity() {
 
@@ -33,9 +33,7 @@ class SearchActivity : AppCompatActivity() {
         const val TRACK_INF = "trackInf"
     }
 
-    private val viewModel by viewModels<SearchViewModel> {
-        SearchViewModel.factory(getSharedPreferences(TRACK_FROM_HISTORY, MODE_PRIVATE), this)
-    }
+    private val viewModel by viewModel<SearchViewModel>()
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var savedText : String
