@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.domain.player.PlayerState.*
-import com.example.playlistmaker.utils.Creator
+import com.example.playlistmaker.domain.player.PlayerState.DEFAULT
+import com.example.playlistmaker.domain.player.PlayerState.PAUSED
+import com.example.playlistmaker.domain.player.PlayerState.PLAYING
+import com.example.playlistmaker.domain.player.PlayerState.PREPARED
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
@@ -34,16 +34,7 @@ class PlayerViewModel(
         }
     }
 
-    companion object {
-        fun factory(url: String) = viewModelFactory {
-            initializer {
-                PlayerViewModel(Creator.providePlayerInteractor(), url)
-            }
-        }
-    }
-
     init {
-
         playerInteractor.prepare(url, listener)
     }
 

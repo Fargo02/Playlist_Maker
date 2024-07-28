@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_white"
     android:orientation="vertical"
-    android:layout_marginEnd="@dimen/mark_12dp"
     android:id="@+id/settings">
 
     <Toolbar
@@ -16,7 +15,6 @@
         android:title="@string/settings">
     </Toolbar>
 
-
     <Switch
         style="@style/switchSettings"
         android:id="@+id/themeSwitcher"
@@ -25,6 +23,7 @@
         android:paddingStart="@dimen/middle_mark"
         android:paddingTop="@dimen/padding_list"
         android:paddingBottom="@dimen/padding_list"
+        android:paddingEnd="@dimen/mark_12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ys_display_regular"

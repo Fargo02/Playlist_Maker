@@ -7,9 +7,12 @@ import com.example.playlistmaker.domain.player.PlayerState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerRepositoryImpl(): PlayerRepository{
-    private var mediaPlayer = MediaPlayer()
+class PlayerRepositoryImpl(
+    private var mediaPlayer: MediaPlayer
+): PlayerRepository {
+
     private lateinit var listener: PlayerInteractor.OnStateChangeListener
+
     override fun prepare(path: String, listener: PlayerInteractor.OnStateChangeListener) {
         this.listener = listener
         mediaPlayer.setDataSource(path)
@@ -21,9 +24,11 @@ class PlayerRepositoryImpl(): PlayerRepository{
             listener.onChange(PlayerState.DEFAULT)
         }
     }
+
     override fun play() {
         mediaPlayer.start()
     }
+
     override fun pause() {
         mediaPlayer.pause()
     }
