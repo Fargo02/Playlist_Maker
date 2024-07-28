@@ -1,6 +1,8 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
+import android.media.MediaPlayer
+import com.example.playlistmaker.data.player.PlayerRepositoryImpl
 import com.example.playlistmaker.data.search.NetworkClient
 import com.example.playlistmaker.data.search.network.ITunesApi
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
@@ -27,6 +29,10 @@ val dataModule = module {
         .getSharedPreferences(TRACK_FROM_HISTORY, Context.MODE_PRIVATE)
     }
 
+    factory {
+        MediaPlayer()
+    }
+
     single<NetworkClient> {
         RetrofitNetworkClient(get(), androidContext())
     }
@@ -34,5 +40,6 @@ val dataModule = module {
     single<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())
     }
+
 
 }

@@ -11,7 +11,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     factory<PlayerRepository> {
-        PlayerRepositoryImpl()
+        PlayerRepositoryImpl(get())
     }
 
     single<TracksRepository> {
