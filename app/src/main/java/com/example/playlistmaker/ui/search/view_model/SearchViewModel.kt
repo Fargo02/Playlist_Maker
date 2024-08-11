@@ -40,7 +40,7 @@ class SearchViewModel(
         if (sharedInteractor.getList().isNotEmpty() && savedText == "") {
             getTrackList.postValue(GetTrackListModel(sharedInteractor.getList(), isVisibility))
         } else {
-            Log.i("ErrorGetTrack", "Ошибка")
+            Log.i("SearchTrack", "Поиск")
         }
     }
 

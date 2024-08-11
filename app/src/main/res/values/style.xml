@@ -113,4 +113,10 @@
     <style name="player_button">
         <item name="android:backgroundTint">@color/dark</item>
     </style>
+
+    <style name="mediaTabLayout">
+        <item name="tabTextColor">@color/black</item>
+        <item name="tabIndicatorColor">@color/black</item>
+        <item name="android:background">@color/white</item>
+    </style>
 </resources>    

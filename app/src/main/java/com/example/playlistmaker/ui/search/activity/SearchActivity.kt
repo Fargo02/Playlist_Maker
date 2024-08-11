@@ -9,7 +9,6 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
@@ -23,7 +22,6 @@ import com.example.playlistmaker.ui.ui.TrackAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class SearchActivity : AppCompatActivity() {
 
@@ -125,7 +123,7 @@ class SearchActivity : AppCompatActivity() {
             binding.cleanHistory.isVisible = false
             binding.placeholderSearchGroup.isVisible = false
             binding.updateSearch.isVisible = false
-            trackAdapter.notifyDataSetChanged()
+            viewModel.getTrackFromSharedPreferences(true, savedText)
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -135,6 +133,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val checkVisibility = s?.isNotEmpty() == true
                 savedText = s.toString()
+                binding.tracksList.isVisible = true
                 binding.placeholderSearchGroup.isVisible = false
                 binding.updateSearch.isVisible = false
                 binding.youSearch.isVisible = false
@@ -170,6 +169,7 @@ class SearchActivity : AppCompatActivity() {
     private fun updateTrackList(trackListData: GetTrackListModel){
         binding.cleanHistory.isVisible = trackListData.isVisible
         binding.youSearch.isVisible = trackListData.isVisible
+        tracks.clear()
         tracks.addAll(trackListData.trackList)
         trackAdapter.notifyDataSetChanged()
     }
@@ -190,7 +190,6 @@ class SearchActivity : AppCompatActivity() {
         binding.tracksList.isVisible = true
         binding.placeholderSearchGroup.isVisible = false
         binding.progressBar.isVisible = false
-
         trackAdapter.tracks.clear()
         trackAdapter.tracks.addAll(tracks)
         trackAdapter.notifyDataSetChanged()
@@ -230,6 +229,7 @@ class SearchActivity : AppCompatActivity() {
         }
         return current
     }
+
     override fun onDestroy() {
         consumerRunnable?.let { mainThreadHandler?.removeCallbacks(it) }
         super.onDestroy()

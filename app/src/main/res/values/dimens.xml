@@ -8,6 +8,11 @@
     <dimen name="big_size_text">22sp</dimen>
 
 
+    <dimen name="title_text_size">32sp</dimen>
+
+    <dimen name="label_text_size">18sp</dimen>
+    <dimen name="value_text_size">18sp</dimen>
+
     <dimen name="clear_mark">0dp</dimen>
     <dimen name="small_mark">8dp</dimen>
     <dimen name="middle_mark">16dp</dimen>
@@ -32,6 +37,7 @@
     <dimen name="mark_36dp">36dp</dimen>
     <dimen name="mark_38dp">38dp</dimen>
     <dimen name="mark_44dp">44dp</dimen>
+    <dimen name="mark_46dp">46dp</dimen>
     <dimen name="mark_124dp">124dp</dimen>
 
     <dimen name="margin_for_placeholder_102dp">102dp</dimen>
