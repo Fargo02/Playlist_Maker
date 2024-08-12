@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.library.activity.MediaLibraryActivity">
+    android:orientation="vertical"
+    android:background="@color/background_white">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Toolbar
+        android:id="@+id/mediaBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/toolbar"
+        android:layout_marginBottom="@dimen/clear_mark"
+        android:title="@string/media">
+    </Toolbar>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        style="@style/mediaTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/middle_mark"
+        android:layout_marginRight="@dimen/middle_mark"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+        app:tabRippleColor="@color/light_gray"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
