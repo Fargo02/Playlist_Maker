@@ -1,44 +1,40 @@
-package com.example.playlistmaker.ui.settings.activity
+package com.example.playlistmaker.ui.settings.fragment
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import com.example.playlistmaker.domain.sharing.model.EmailData
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.utils.Application
+import com.example.playlistmaker.utils.BindingFragment
+import com.example.playlistmaker.utils.KEY_NIGHT_MODE
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-const val KEY_NIGHT_MODE = "nightMode"
-class SettingsActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivitySettingsBinding
+class SettingsFragment(): BindingFragment<FragmentSettingsBinding>() {
 
     private val viewModel: SettingsViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentSettingsBinding {
+        return FragmentSettingsBinding.inflate(inflater,container, false)
+    }
 
-        val sharedPreferences = getSharedPreferences(KEY_NIGHT_MODE, MODE_PRIVATE)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val sharedPreferences = requireContext().getSharedPreferences(KEY_NIGHT_MODE, MODE_PRIVATE)
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            (applicationContext as Application).switchTheme(isChecked)
-            sharedPreferences.edit()
-                .putBoolean(KEY_NIGHT_MODE, isChecked)
-                .apply()
+            viewModel.switchTheme(isChecked, sharedPreferences)
         }
 
-        viewModel.observeChangeTheme().observe(this) {
+        viewModel.observeChangeTheme().observe(viewLifecycleOwner) {
             binding.themeSwitcher.isChecked = it
             Log.i("theme", "$it")
-        }
-
-        binding.settingsBack.setNavigationOnClickListener {
-            finish()
         }
 
         binding.shareTheApp.setOnClickListener {

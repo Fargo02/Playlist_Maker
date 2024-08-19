@@ -1,36 +1,35 @@
-package com.example.playlistmaker.ui.player.activity
+package com.example.playlistmaker.ui.player.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.ui.search.activity.SearchActivity.Companion.TRACK_INF
-import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.domain.player.PlayerState.*
+import com.example.playlistmaker.domain.player.PlayerState.DEFAULT
+import com.example.playlistmaker.domain.player.PlayerState.PAUSED
+import com.example.playlistmaker.domain.player.PlayerState.PLAYING
+import com.example.playlistmaker.domain.player.PlayerState.PREPARED
+import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.ui.mapper.ArtworkMapper
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.ui.ui.ImageMaker
+import com.example.playlistmaker.utils.BindingFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class PlayerActivity : AppCompatActivity() {
-
-    companion object{
-        private const val DELAY = 400L
-    }
+class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
 
     private val imageMaker = ImageMaker()
-
-    private lateinit var binding: ActivityPlayerBinding
 
     private lateinit var currentTrack: Track
 
@@ -43,16 +42,16 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var playerState: PlayerState
 
-    @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentPlayerBinding {
+        return FragmentPlayerBinding.inflate(inflater, container, false)
+    }
 
-        val track = intent.getStringExtra(TRACK_INF)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val track = requireArguments().getString(CURRENT_TRACK) ?: ""
         val type = object : TypeToken<Track>() {}.type
         currentTrack = Gson().fromJson(track, type) as Track
-
-        super.onCreate(savedInstanceState)
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
@@ -65,7 +64,7 @@ class PlayerActivity : AppCompatActivity() {
             8
         )
 
-        viewModel.observeStateListener().observe(this) { state ->
+        viewModel.observeStateListener().observe(viewLifecycleOwner) { state ->
             when (state!!) {
                 PREPARED -> {
                     playerState = PAUSED
@@ -99,6 +98,10 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.listener.onChange(playerState)
         }
 
+        binding.buttonBack.setNavigationOnClickListener {
+            findNavController().popBackStack(R.id.searchFragment, false)
+        }
+
         binding.trackName.text = currentTrack.trackName
         binding.artistName.text = currentTrack.artistName
         binding.playingTime.text = resources.getString(R.string.start_track)
@@ -111,10 +114,6 @@ class PlayerActivity : AppCompatActivity() {
             binding.albumGroup!!.isVisible = false
         } else {
             binding.albumName.text = currentTrack.collectionName
-        }
-
-        binding.buttonBack.setNavigationOnClickListener {
-            finish()
         }
 
         binding.buttonAddToList.setOnClickListener {
@@ -150,8 +149,8 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         timerThread?.let { mainThreadHandler?.removeCallbacks(it) }
         viewModel.getRelease()
     }
@@ -161,4 +160,16 @@ class PlayerActivity : AppCompatActivity() {
         playerState = PAUSED
         viewModel.listener.onChange(playerState)
     }
+
+    companion object{
+
+        private const val DELAY = 400L
+        private const val CURRENT_TRACK = "current_track"
+
+        fun createArgs(track: String): Bundle =
+            bundleOf(
+            CURRENT_TRACK to track
+        )
+    }
+
 }
