@@ -1,39 +1,38 @@
-package com.example.playlistmaker.ui.search.activity
+package com.example.playlistmaker.ui.search.fragment
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.ui.player.fragment.PlayerFragment
 import com.example.playlistmaker.ui.search.GetTrackListModel
+import com.example.playlistmaker.ui.search.view_model.SaveTracksState
 import com.example.playlistmaker.ui.search.view_model.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.ui.TrackAdapter
+import com.example.playlistmaker.utils.BindingFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val EMPTY_STRING = ""
-        const val TRACK_INF = "trackInf"
-    }
+class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
 
     private val viewModel by viewModel<SearchViewModel>()
 
-    private lateinit var binding: ActivitySearchBinding
     private lateinit var savedText : String
 
     private var isClickAllowed = true
@@ -45,15 +44,19 @@ class SearchActivity : AppCompatActivity() {
     private var mainThreadHandler: Handler? = null
     private var consumerRunnable: Runnable? = null
 
-    @SuppressLint("MissingInflatedId", "SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?)  {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentSearchBinding {
+        return FragmentSearchBinding.inflate(inflater, container, false)
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
         savedText = savedInstanceState?.getString(EMPTY_STRING) ?: ""
+
+        Log.i("saveString", "$savedText")
 
         if (savedText != "") {
             val json = savedInstanceState?.getString(EMPTY_STRING)
@@ -64,30 +67,31 @@ class SearchActivity : AppCompatActivity() {
             tracks = savedTracks
         }
         trackAdapter.tracks = tracks
-        binding.tracksList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.tracksList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.tracksList.adapter = trackAdapter
 
-        viewModel.observeOnTrackClicked().observe(this) {
+        viewModel.observeOnTrackClicked().observe(viewLifecycleOwner) {
             removeAndPutTrack(it)
         }
 
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        viewModel.observeGetTrackList().observe(this) {
+        viewModel.observeGetTrackList().observe(viewLifecycleOwner) {
             updateTrackList(it)
         }
 
         clickDebounce().also {
             trackAdapter.setOnItemClickListener { track ->
                 viewModel.updateTrack(track, tracks)
-                val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+                val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
                 inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
                 val json = Gson().toJson(track)
-                val playerIntent = Intent(this, PlayerActivity::class.java)
-                playerIntent.putExtra(TRACK_INF, json)
-                startActivity(playerIntent)
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_playerFragment,
+                    PlayerFragment.createArgs(json)
+                )
             }
         }
 
@@ -109,12 +113,8 @@ class SearchActivity : AppCompatActivity() {
             viewModel.getTrackFromSharedPreferences(true, savedText)
         }
 
-        binding.searchBack.setNavigationOnClickListener {
-            finish()
-        }
-
         binding.clearIcon.setOnClickListener {
-            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
             binding.inputEditText.setText("")
             binding.inputEditText.clearFocus()
@@ -161,12 +161,15 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(EMPTY_STRING, json)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState.getString(EMPTY_STRING, savedText)
+    private fun updateTrackList(state: SaveTracksState){
+        when (state) {
+            is SaveTracksState.Content -> showSaveTracks(state.tracks)
+            is SaveTracksState.Empty -> Log.i("empty", "empty")
+        }
+
     }
 
-    private fun updateTrackList(trackListData: GetTrackListModel){
+    private fun showSaveTracks(trackListData: GetTrackListModel){
         binding.cleanHistory.isVisible = trackListData.isVisible
         binding.youSearch.isVisible = trackListData.isVisible
         tracks.clear()
@@ -225,13 +228,20 @@ class SearchActivity : AppCompatActivity() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            mainThreadHandler?.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            mainThreadHandler?.postDelayed({ isClickAllowed = true },
+                CLICK_DEBOUNCE_DELAY
+            )
         }
         return current
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         consumerRunnable?.let { mainThreadHandler?.removeCallbacks(it) }
-        super.onDestroy()
+        super.onDestroyView()
+    }
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val EMPTY_STRING = ""
     }
 }

@@ -4,7 +4,6 @@ package com.example.playlistmaker.ui.search.view_model
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,8 +26,8 @@ class SearchViewModel(
 
     private var latestSearchText: String? = null
 
-    private val getTrackList = MutableLiveData<GetTrackListModel>()
-    fun observeGetTrackList(): LiveData<GetTrackListModel> = getTrackList
+    private val getTrackList = MutableLiveData<SaveTracksState>()
+    fun observeGetTrackList(): LiveData<SaveTracksState> = getTrackList
 
     private val onTrackClicked = MutableLiveData<Track>()
     fun observeOnTrackClicked(): LiveData<Track> = onTrackClicked
@@ -38,9 +37,9 @@ class SearchViewModel(
 
     fun getTrackFromSharedPreferences(isVisibility: Boolean, savedText: String){
         if (sharedInteractor.getList().isNotEmpty() && savedText == "") {
-            getTrackList.postValue(GetTrackListModel(sharedInteractor.getList(), isVisibility))
+            getTrackList.postValue(SaveTracksState.Content(GetTrackListModel(sharedInteractor.getList(), isVisibility)))
         } else {
-            Log.i("SearchTrack", "Поиск")
+            getTrackList.postValue(SaveTracksState.Empty)
         }
     }
 
