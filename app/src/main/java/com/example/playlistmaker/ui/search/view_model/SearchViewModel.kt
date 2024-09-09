@@ -39,11 +39,14 @@ class SearchViewModel(
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState() : LiveData<SearchState> = stateLiveData
 
+    //имеет ли смысл использовать здесь корутин?
     fun getTrackFromSharedPreferences(isVisibility: Boolean, savedText: String){
-        if (sharedInteractor.getList().isNotEmpty() && savedText == "") {
-            getTrackList.postValue(SaveTracksState.Content(GetTrackListModel(sharedInteractor.getList(), isVisibility)))
-        } else {
-            getTrackList.postValue(SaveTracksState.Empty)
+        viewModelScope.launch {
+            if (sharedInteractor.getList().isNotEmpty() && savedText == "") {
+                getTrackList.postValue(SaveTracksState.Content(GetTrackListModel(sharedInteractor.getList(), isVisibility)))
+            } else {
+                getTrackList.postValue(SaveTracksState.Empty)
+            }
         }
     }
 
