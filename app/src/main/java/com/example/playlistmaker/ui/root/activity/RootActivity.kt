@@ -26,9 +26,11 @@ class RootActivity : AppCompatActivity() {
             when(destination.id) {
                 R.id.playerFragment -> {
                     binding.bottomNavigationView.isVisible = false
+                    binding.divider.isVisible = false
                 }
                 else -> {
                     binding.bottomNavigationView.isVisible = true
+                    binding.divider.isVisible = true
                 }
             }
         }

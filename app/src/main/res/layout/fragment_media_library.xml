@@ -23,7 +23,7 @@
         android:layout_marginLeft="@dimen/middle_mark"
         android:layout_marginRight="@dimen/middle_mark"
         app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
-        app:tabRippleColor="@color/light_gray"/>
+        app:tabRippleColor="@color/light_grey"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
