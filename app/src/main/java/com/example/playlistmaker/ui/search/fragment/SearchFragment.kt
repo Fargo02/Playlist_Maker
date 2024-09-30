@@ -2,8 +2,6 @@ package com.example.playlistmaker.ui.search.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -13,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
@@ -25,8 +24,8 @@ import com.example.playlistmaker.ui.search.view_model.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.ui.TrackAdapter
 import com.example.playlistmaker.utils.BindingFragment
+import com.example.playlistmaker.utils.debounce
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
@@ -35,14 +34,11 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
 
     private lateinit var savedText : String
 
-    private var isClickAllowed = true
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     private var tracks = ArrayList<Track>()
-    private var savedTracks = ArrayList<Track>()
-    private val trackAdapter = TrackAdapter()
 
-    private var mainThreadHandler: Handler? = null
-    private var consumerRunnable: Runnable? = null
+    private var trackAdapter: TrackAdapter? = null
 
     override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentSearchBinding {
         return FragmentSearchBinding.inflate(inflater, container, false)
@@ -52,21 +48,26 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainThreadHandler = Handler(Looper.getMainLooper())
+        savedText = ""
 
-        savedText = savedInstanceState?.getString(EMPTY_STRING) ?: ""
-
-        Log.i("saveString", "$savedText")
-
-        if (savedText != "") {
-            val json = savedInstanceState?.getString(EMPTY_STRING)
-            val type = object : TypeToken<ArrayList<Track>>() {}.type
-            savedTracks = Gson().fromJson(json, type) as ArrayList<Track>
-            binding.youSearch.isVisible = false
-            binding.cleanHistory.isVisible = false
-            tracks = savedTracks
+        onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
+            val json = Gson().toJson(track)
+            findNavController().navigate(R.id.action_searchFragment_to_playerFragment,
+                PlayerFragment.createArgs(json))
+            viewModel.updateTrack(track, tracks)
         }
-        trackAdapter.tracks = tracks
+
+        trackAdapter = TrackAdapter(
+            object : TrackAdapter.TrackClickListener {
+                override fun onTrackClick(track: Track) {
+                    val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+                    inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
+                    onTrackClickDebounce(track)
+                }
+            }
+        )
+
+        trackAdapter?.tracks = tracks
         binding.tracksList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.tracksList.adapter = trackAdapter
 
@@ -82,19 +83,6 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
             updateTrackList(it)
         }
 
-        clickDebounce().also {
-            trackAdapter.setOnItemClickListener { track ->
-                viewModel.updateTrack(track, tracks)
-                val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-                inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
-                val json = Gson().toJson(track)
-                findNavController().navigate(
-                    R.id.action_searchFragment_to_playerFragment,
-                    PlayerFragment.createArgs(json)
-                )
-            }
-        }
-
         binding.updateSearch.setOnClickListener {
             binding.placeholderSearchGroup.isVisible = false
             binding.updateSearch.isVisible = false
@@ -106,7 +94,7 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
             tracks.clear()
             binding.youSearch.isVisible = false
             binding.cleanHistory.isVisible = false
-            trackAdapter.notifyDataSetChanged()
+            trackAdapter?.notifyDataSetChanged()
         }
 
         binding.inputEditText.setOnFocusChangeListener { _, _ ->
@@ -142,9 +130,8 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
                 binding.progressBar.isVisible = checkVisibility
 
                 tracks.clear()
-                viewModel.searchDebounce(
-                    changedText = s?.toString() ?: ""
-                )
+
+                viewModel.searchDebounce(changedText = s?.toString() ?: "")
 
                 viewModel.getTrackFromSharedPreferences(!checkVisibility, savedText)
             }
@@ -154,11 +141,9 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         simpleTextWatcher.let { binding.inputEditText.addTextChangedListener(it) }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(EMPTY_STRING, savedText)
-        val json = Gson().toJson(savedTracks)
-        outState.putString(EMPTY_STRING, json)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        trackAdapter = null
     }
 
     private fun updateTrackList(state: SaveTracksState){
@@ -174,13 +159,13 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         binding.youSearch.isVisible = trackListData.isVisible
         tracks.clear()
         tracks.addAll(trackListData.trackList)
-        trackAdapter.notifyDataSetChanged()
+        trackAdapter?.notifyDataSetChanged()
     }
 
     private fun removeAndPutTrack(track: Track) {
         tracks.remove(track)
         tracks.add(0, track)
-        trackAdapter.notifyDataSetChanged()
+        trackAdapter?.notifyDataSetChanged()
     }
 
     private fun showLoading() {
@@ -193,9 +178,9 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         binding.tracksList.isVisible = true
         binding.placeholderSearchGroup.isVisible = false
         binding.progressBar.isVisible = false
-        trackAdapter.tracks.clear()
-        trackAdapter.tracks.addAll(tracks)
-        trackAdapter.notifyDataSetChanged()
+        trackAdapter?.tracks?.clear()
+        trackAdapter?.tracks?.addAll(tracks)
+        trackAdapter?.notifyDataSetChanged()
     }
 
     private fun showError() {
@@ -224,24 +209,7 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            mainThreadHandler?.postDelayed({ isClickAllowed = true },
-                CLICK_DEBOUNCE_DELAY
-            )
-        }
-        return current
-    }
-
-    override fun onDestroyView() {
-        consumerRunnable?.let { mainThreadHandler?.removeCallbacks(it) }
-        super.onDestroyView()
-    }
-
     companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val EMPTY_STRING = ""
+        private const val CLICK_DEBOUNCE_DELAY = 300L
     }
 }

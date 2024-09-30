@@ -10,7 +10,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import com.example.playlistmaker.domain.sharing.model.EmailData
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
-import com.example.playlistmaker.utils.Application
 import com.example.playlistmaker.utils.BindingFragment
 import com.example.playlistmaker.utils.KEY_NIGHT_MODE
 import org.koin.androidx.viewmodel.ext.android.viewModel

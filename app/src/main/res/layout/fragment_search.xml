@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background_white"
     xmlns:tools="http://schemas.android.com/tools">
     <Toolbar
         android:layout_width="@dimen/clear_mark"
@@ -136,15 +137,15 @@
         app:layout_constraintTop_toBottomOf="@+id/youSearch"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constrainedHeight="true"
-        tools:itemCount="0"
+        tools:itemCount="13"
         tools:listitem="@layout/track_item" />
     <Button
         android:id="@+id/cleanHistory"
         android:layout_width="wrap_content"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/big_margin"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="80dp"
         android:layout_weight="0"
         android:backgroundTint="@color/black"
         android:insetTop="@dimen/clear_mark"

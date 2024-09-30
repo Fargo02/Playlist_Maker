@@ -31,6 +31,11 @@
     <string name="new_playlist">Новый плейлист</string>
     <string name="selected_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
+    <string name="search_fragment">SearchFragment</string>
+    <string name="media_library_fragment">MediaLibraryFragment</string>
+    <string name="settings_fragment">SettingsFragment</string>
+    <string name="player_fragment">PlayerFragment</string>
+
 
 
 

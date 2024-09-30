@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.model.Track
 
-class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+class TrackViewHolder(
+    itemView: View,
+    private val clickListener: TrackAdapter.TrackClickListener
+): RecyclerView.ViewHolder(itemView) {
     private val photoMaker = ImageMaker()
     private val cover: ImageView = itemView.findViewById(R.id.itemTrackCover)
     private val name: TextView = itemView.findViewById(R.id.itemTrackName)
@@ -23,5 +26,7 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             R.drawable.placeholder,
             2
         )
+
+        itemView.setOnClickListener { clickListener.onTrackClick(track = model) }
     }
 }

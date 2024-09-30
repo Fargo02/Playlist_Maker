@@ -3,12 +3,12 @@ package com.example.playlistmaker.ui.player.fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
@@ -24,6 +24,9 @@ import com.example.playlistmaker.ui.ui.ImageMaker
 import com.example.playlistmaker.utils.BindingFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -39,6 +42,8 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(currentTrack.previewUrl)
     }
+
+    private var timerJob: Job? = null
 
     private lateinit var playerState: PlayerState
 
@@ -116,35 +121,17 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
             binding.albumName.text = currentTrack.collectionName
         }
 
-        binding.buttonAddToList.setOnClickListener {
-            if (binding.buttonAddToList.background.constantState == resources.getDrawable(R.drawable.button_add_to_list_off).constantState) {
-                binding.buttonAddToList.setBackgroundResource(R.drawable.button_add_to_list_on)
-            } else {
-                binding.buttonAddToList.setBackgroundResource(R.drawable.button_add_to_list_off)
-            }
-        }
+        binding.buttonAddToList.setOnClickListener { }
 
-        binding.buttonLike.setOnClickListener {
-            if (binding.buttonLike.background.constantState == resources.getDrawable(R.drawable.button_like_off).constantState) {
-                binding.buttonLike.setBackgroundResource(R.drawable.button_like_on)
-            } else {
-                binding.buttonLike.setBackgroundResource(R.drawable.button_like_off)
-            }
-        }
+        binding.buttonLike.setOnClickListener { }
     }
 
     private fun startTime(){
-        timerThread = createUpdateTimerTask()
-        timerThread?.let { mainThreadHandler?.post(it) }
-    }
-
-    private fun createUpdateTimerTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
+        timerJob = lifecycleScope.launch {
+            while (viewModel.isPlaying()) {
                 val currentTime = viewModel.getCurrentTime()
                 binding.playingTime.text = currentTime
-                mainThreadHandler?.postDelayed(this, DELAY)
-                Log.i("currentTime","currentTime: $currentTime")
+                delay(DELAY)
             }
         }
     }

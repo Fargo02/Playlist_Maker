@@ -44,7 +44,12 @@ class PlayerViewModel(
     fun getCurrentTime(): String {
         return playerInteractor.getCurrentTime()
     }
+
     fun getRelease() {
         playerInteractor.release()
+    }
+
+    fun isPlaying(): Boolean {
+        return playerInteractor.isPlaying()
     }
 }

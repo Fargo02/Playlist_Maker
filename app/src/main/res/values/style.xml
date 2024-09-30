@@ -100,4 +100,11 @@
         <item name="tabIndicatorColor">@color/black</item>
         <item name="android:background">@color/white</item>
     </style>
+
+    <style name="bottomNavigationBar">
+        <item name="itemIconTint">@drawable/selector_bottom_nav_light</item>
+        <item name="itemTextColor">@drawable/selector_bottom_nav_light</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
 </resources>    
