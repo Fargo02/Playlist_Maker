@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.sharing
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.domain.sharing.history.SharingHistoryTrackRepository
 import com.google.gson.Gson
@@ -10,13 +11,18 @@ private const val HISTORY_SIZE = 10
 private const val TRACK_FROM_HISTORY = "historyTrack"
 
 class SharingHistoryTrackRepositoryImpl(
-    private val sharedPreferences : SharedPreferences
+    private val sharedPreferences : SharedPreferences,
+    private val appDatabase: AppDatabase,
 ): SharingHistoryTrackRepository {
 
     private var historyList: ArrayList<Track> = readSearchHistory()
 
-    override fun getList(): List<Track> {
-        return historyList
+    override suspend fun getList(): List<Track> {
+        val trackIdSet = appDatabase.trackDao().getIdTracks().toSet()
+        return historyList.map { track ->
+            val isFavorite = trackIdSet.contains(track.trackId)
+            track.copy(isFavorite = isFavorite)
+        }
     }
 
     override fun addTrack(track: Track) {

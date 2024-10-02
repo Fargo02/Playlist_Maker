@@ -41,20 +41,24 @@ class SearchViewModel(
 
 
     fun getTrackFromSharedPreferences(isVisibility: Boolean, savedText: String){
-        if (sharedInteractor.getList().isNotEmpty() && savedText == "") {
-            getTrackList.postValue(SaveTracksState.Content(GetTrackListModel(sharedInteractor.getList(), isVisibility)))
-        } else {
-            getTrackList.postValue(SaveTracksState.Empty)
+        viewModelScope.launch {
+            if (sharedInteractor.getList().isNotEmpty() && savedText == "") {
+                getTrackList.postValue(SaveTracksState.Content(GetTrackListModel(sharedInteractor.getList(), isVisibility)))
+            } else {
+                getTrackList.postValue(SaveTracksState.Empty)
+            }
         }
 
     }
 
     fun updateTrack(track: Track, tracksList: List<Track>) {
-        if (sharedInteractor.getList() == tracksList) {
-            onTrackClicked.postValue(track)
-            sharedInteractor.addTrack(track)
-        } else {
-            sharedInteractor.addTrack(track)
+        viewModelScope.launch {
+            if (sharedInteractor.getList() == tracksList) {
+                onTrackClicked.postValue(track)
+                sharedInteractor.addTrack(track)
+            } else {
+                sharedInteractor.addTrack(track)
+            }
         }
     }
 
@@ -97,7 +101,9 @@ class SearchViewModel(
                 )
             }
             tracks.isEmpty() -> {
-                SearchState.Empty
+                renderState(
+                    SearchState.Empty
+                )
             }
             else -> {
                 renderState(

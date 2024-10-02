@@ -125,20 +125,23 @@
         app:layout_constraintTop_toBottomOf="@id/inputEditText"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintVertical_chainStyle="packed" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tracksList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mark_20dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@+id/cleanHistory"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/youSearch"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constrainedHeight="true"
         tools:itemCount="13"
         tools:listitem="@layout/track_item" />
+
     <Button
         android:id="@+id/cleanHistory"
         android:layout_width="wrap_content"

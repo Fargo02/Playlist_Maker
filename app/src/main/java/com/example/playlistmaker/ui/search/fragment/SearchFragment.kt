@@ -55,6 +55,7 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
             findNavController().navigate(R.id.action_searchFragment_to_playerFragment,
                 PlayerFragment.createArgs(json))
             viewModel.updateTrack(track, tracks)
+            onDestroy()
         }
 
         trackAdapter = TrackAdapter(
@@ -144,6 +145,10 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
     override fun onDestroyView() {
         super.onDestroyView()
         trackAdapter = null
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     private fun updateTrackList(state: SaveTracksState){

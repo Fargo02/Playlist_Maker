@@ -7,7 +7,7 @@ import com.example.playlistmaker.domain.sharing.history.SharingHistoryTrackRepos
 class SharingHistoryTrackInteractorImpl(
     private val repository: SharingHistoryTrackRepository
 ): SharingHistoryTrackInteractor {
-    override fun getList(): List<Track> {
+    override suspend fun getList(): List<Track> {
         return repository.getList()
     }
 

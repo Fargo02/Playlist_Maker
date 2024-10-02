@@ -4,7 +4,7 @@ import com.example.playlistmaker.domain.search.model.Track
 
 interface SharingHistoryTrackRepository {
 
-    fun getList(): List<Track>
+    suspend fun getList(): List<Track>
 
     fun addTrack(track: Track)
 

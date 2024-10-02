@@ -69,7 +69,7 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
             8
         )
 
-        viewModel.observeStateListener().observe(viewLifecycleOwner) { state ->
+        viewModel.observePlayerStateListener().observe(viewLifecycleOwner) { state ->
             when (state!!) {
                 PREPARED -> {
                     playerState = PAUSED
@@ -104,7 +104,7 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
         }
 
         binding.buttonBack.setNavigationOnClickListener {
-            findNavController().popBackStack(R.id.searchFragment, false)
+            findNavController().popBackStack()
         }
 
         binding.trackName.text = currentTrack.trackName
@@ -123,7 +123,25 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
 
         binding.buttonAddToList.setOnClickListener { }
 
-        binding.buttonLike.setOnClickListener { }
+
+        if (currentTrack.isFavorite) {
+            binding.buttonLike.setBackgroundResource(R.drawable.button_like_on)
+        } else {
+            binding.buttonLike.setBackgroundResource(R.drawable.button_like_off)
+        }
+
+        viewModel.observeFavouriteState().observe(viewLifecycleOwner) { isFavourite ->
+            currentTrack.isFavorite = isFavourite
+            if (isFavourite) {
+                binding.buttonLike.setBackgroundResource(R.drawable.button_like_on)
+            } else {
+                binding.buttonLike.setBackgroundResource(R.drawable.button_like_off)
+            }
+        }
+
+        binding.buttonLike.setOnClickListener {
+            viewModel.onFavoriteClicked(currentTrack)
+        }
     }
 
     private fun startTime(){

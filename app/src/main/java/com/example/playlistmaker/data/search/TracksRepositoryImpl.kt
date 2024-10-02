@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.search
 
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.search.dto.TracksSearchRequest
 import com.example.playlistmaker.data.search.dto.TracksSearchResponse
 import com.example.playlistmaker.domain.search.TracksRepository
@@ -13,7 +14,8 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class TracksRepositoryImpl(
-    private val networkClient: NetworkClient
+    private val networkClient: NetworkClient,
+    private val appDatabase: AppDatabase,
 ) : TracksRepository {
 
     private val timeFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
@@ -26,8 +28,11 @@ class TracksRepositoryImpl(
                 emit(Resource.Error("Проверьте подключение к интернету"))
             }
             200 -> {
+                val trackIdSet = appDatabase.trackDao().getIdTracks().toSet()
+
                 with(response as TracksSearchResponse) {
                     val data = results.map {
+                        val isFavorite = trackIdSet.contains(it.trackId)
                         Track(
                             it.trackName,
                             it.artistName,
@@ -41,7 +46,8 @@ class TracksRepositoryImpl(
                             ).year.toString() else "",
                             it.primaryGenreName,
                             it.country,
-                            it.previewUrl
+                            it.previewUrl,
+                            isFavorite
                         )
                     }
                     emit(Resource.Success(data))
