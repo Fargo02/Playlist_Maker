@@ -29,26 +29,12 @@ class FavouriteTracksViewModel(
 
 
     private fun processResult(foundTracks: List<Track>?) {
-        val tracks = mutableListOf<Track>()
 
-        if (foundTracks != null) {
-            tracks.addAll(foundTracks)
-        }
+        renderState(
+            if (foundTracks.isNullOrEmpty()) FavouriteState.Empty
+            else FavouriteState.Content(tracks = foundTracks)
+        )
 
-        when {
-            tracks.isEmpty() -> {
-                renderState(
-                    FavouriteState.Empty
-                )
-            }
-            else -> {
-                renderState(
-                    FavouriteState.Content(
-                        tracks = tracks,
-                    )
-                )
-            }
-        }
     }
 
     private fun renderState(state: FavouriteState) {

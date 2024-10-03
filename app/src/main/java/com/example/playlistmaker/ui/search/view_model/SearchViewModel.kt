@@ -88,26 +88,10 @@ class SearchViewModel(
     }
 
     private fun processHistoryResult(foundTracks: List<Track>?) {
-        val tracks = mutableListOf<Track>()
-
-        if (foundTracks != null) {
-            tracks.addAll(foundTracks)
-        }
-
-        when {
-            tracks.isEmpty() -> {
-                renderHistoryState(
-                    HistoryState.Empty
-                )
-            }
-            else -> {
-                renderHistoryState(
-                    HistoryState.Content(
-                        tracks = tracks,
-                    )
-                )
-            }
-        }
+        renderHistoryState(
+            if (foundTracks.isNullOrEmpty()) HistoryState.Empty
+            else HistoryState.Content(foundTracks)
+        )
     }
 
     private fun renderHistoryState(state: HistoryState) {

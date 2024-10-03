@@ -28,9 +28,6 @@ class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
 
     private val viewModel: FavouriteTracksViewModel by viewModel()
 
-    private lateinit var onTrackClickDebounce: (Track) -> Unit
-
-
     override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentFavouritesBinding {
         return FragmentFavouritesBinding.inflate(inflater, container, false)
     }
@@ -41,20 +38,14 @@ class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
 
         viewModel.fillData()
 
-        onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
+        val onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
             val json = Gson().toJson(track)
             findNavController().navigate(
                 R.id.action_mediaLibraryFragment_to_playerFragment,
                 PlayerFragment.createArgs(json))
         }
 
-        trackAdapter = TrackAdapter(
-            object : TrackAdapter.TrackClickListener {
-                override fun onTrackClick(track: Track) {
-                    onTrackClickDebounce(track)
-                }
-            }
-        )
+        trackAdapter = TrackAdapter { track -> onTrackClickDebounce(track) }
 
         trackAdapter?.tracks = tracks
         binding.tracksList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)

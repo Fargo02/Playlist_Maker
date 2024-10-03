@@ -3,6 +3,7 @@ package com.example.playlistmaker.di
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.data.mapper.TracksResponseMapper
 import com.example.playlistmaker.data.search.NetworkClient
 import com.example.playlistmaker.data.search.network.ITunesApi
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
@@ -41,4 +42,5 @@ val dataModule = module {
             .build()
     }
 
+    single { TracksResponseMapper(get()) }
 }

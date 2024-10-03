@@ -32,7 +32,7 @@ class TrackDbConverter {
             artworkUrl100 = track.artworkUrl100,
             trackId = track.trackId,
             collectionName = track.collectionName,
-            releaseDate = track.releaseDate!!,
+            releaseDate = track.releaseDate,
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl,
