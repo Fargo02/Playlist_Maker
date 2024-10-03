@@ -28,7 +28,7 @@ class TracksRepositoryImpl(
                 emit(Resource.Error("Проверьте подключение к интернету"))
             }
             200 -> {
-                val trackIdSet = appDatabase.trackDao().getIdTracks().toSet()
+                val trackIdSet = appDatabase.trackFavouriteDao().getIdTracks().toSet()
 
                 with(response as TracksSearchResponse) {
                     val data = results.map {

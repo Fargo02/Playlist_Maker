@@ -9,7 +9,7 @@ import com.example.playlistmaker.data.db.entity.TrackEntity
 import com.example.playlistmaker.data.db.entity.TrackEntity.Companion.TABLE_NAME
 
 @Dao
-interface TrackDao {
+interface TrackFavouriteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrack(track: TrackEntity)

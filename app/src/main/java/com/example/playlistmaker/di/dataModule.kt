@@ -1,6 +1,5 @@
 package com.example.playlistmaker.di
 
-import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.data.db.AppDatabase
@@ -14,7 +13,6 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val TRACK_FROM_HISTORY = "historyTrack"
 
 val dataModule = module {
 
@@ -24,10 +22,6 @@ val dataModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ITunesApi::class.java)
-    }
-
-    single { androidContext()
-        .getSharedPreferences(TRACK_FROM_HISTORY, Context.MODE_PRIVATE)
     }
 
     factory {

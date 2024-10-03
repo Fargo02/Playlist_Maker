@@ -1,14 +1,15 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.data.db.converter.HistoryTrackDbConverter
 import com.example.playlistmaker.data.db.converter.TrackDbConverter
 import com.example.playlistmaker.data.favourites.FavouritesRepositoryImpl
 import com.example.playlistmaker.data.player.PlayerRepositoryImpl
 import com.example.playlistmaker.data.search.TracksRepositoryImpl
-import com.example.playlistmaker.data.sharing.SharingHistoryTrackRepositoryImpl
+import com.example.playlistmaker.data.history.HistoryTrackRepositoryImpl
 import com.example.playlistmaker.domain.favourites.FavouritesRepository
 import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.domain.search.TracksRepository
-import com.example.playlistmaker.domain.sharing.history.SharingHistoryTrackRepository
+import com.example.playlistmaker.domain.history.HistoryTrackRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -21,8 +22,8 @@ val repositoryModule = module {
         TracksRepositoryImpl(get(), get())
     }
 
-    single<SharingHistoryTrackRepository> {
-        SharingHistoryTrackRepositoryImpl(get(), get())
+    single<HistoryTrackRepository> {
+        HistoryTrackRepositoryImpl(get(), get())
     }
 
     single <FavouritesRepository>{
@@ -30,4 +31,6 @@ val repositoryModule = module {
     }
 
     factory { TrackDbConverter() }
+
+    factory { HistoryTrackDbConverter() }
 }

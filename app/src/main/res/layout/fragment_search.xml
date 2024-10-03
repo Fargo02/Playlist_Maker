@@ -139,7 +139,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/youSearch"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:itemCount="13"
+        tools:itemCount="0"
         tools:listitem="@layout/track_item" />
 
     <Button
