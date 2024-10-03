@@ -124,19 +124,15 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
         binding.buttonAddToList.setOnClickListener { }
 
 
-        if (currentTrack.isFavorite) {
-            binding.buttonLike.setBackgroundResource(R.drawable.button_like_on)
-        } else {
-            binding.buttonLike.setBackgroundResource(R.drawable.button_like_off)
-        }
+        binding.buttonLike.setImageResource(
+            if (currentTrack.isFavorite) R.drawable.ic_like_on else R.drawable.ic_like_off
+        )
 
         viewModel.observeFavouriteState().observe(viewLifecycleOwner) { isFavourite ->
             currentTrack.isFavorite = isFavourite
-            if (isFavourite) {
-                binding.buttonLike.setBackgroundResource(R.drawable.button_like_on)
-            } else {
-                binding.buttonLike.setBackgroundResource(R.drawable.button_like_off)
-            }
+            binding.buttonLike.setImageResource(
+                if (isFavourite) R.drawable.ic_like_on else R.drawable.ic_like_off
+            )
         }
 
         binding.buttonLike.setOnClickListener {

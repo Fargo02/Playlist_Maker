@@ -115,7 +115,7 @@
             app:layout_constraintStart_toEndOf="@id/buttonPlay"
             app:layout_constraintTop_toBottomOf="@id/artistName"
             app:layout_constraintEnd_toStartOf="@+id/right_guideline_24dp"
-            android:background="@drawable/button_like_off"/>
+            android:background="@drawable/ic_like_off"/>
         <TextView
             android:id="@+id/playingTime"
             style="@style/textColor"

@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 class FavouriteTracksViewModel(
     private val favouritesInteractor: FavouritesInteractor
 ): ViewModel() {
-    init {
+
+    fun fillData() {
         viewModelScope.launch {
             favouritesInteractor
                 .getFavouritesTracks()

@@ -111,12 +111,14 @@
             app:layout_constraintTop_toBottomOf="@id/artistName"
             app:layout_constraintEnd_toStartOf="@+id/buttonLike"
             android:background="@drawable/button_play_off"/>
-        <ImageView
+        <ImageButton
             android:id="@+id/buttonLike"
+            style="@style/button_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/radius_btn_54dp"
-            app:srcCompat="@drawable/button_like_on"
+            android:importantForAccessibility="no"
+            tool:src="@drawable/ic_like_off"
             app:layout_constraintStart_toEndOf="@id/buttonPlay"
             app:layout_constraintTop_toBottomOf="@id/artistName"
             app:layout_constraintEnd_toStartOf="@+id/right_guideline_24dp" />

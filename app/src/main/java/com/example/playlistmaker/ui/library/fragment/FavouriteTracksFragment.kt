@@ -39,6 +39,8 @@ class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.fillData()
+
         onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
             val json = Gson().toJson(track)
             findNavController().navigate(

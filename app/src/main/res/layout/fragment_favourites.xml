@@ -48,8 +48,6 @@
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:itemCount="13"
-        android:paddingBottom="@dimen/mark_56dp"
-
         tools:listitem="@layout/track_item" />
 
 

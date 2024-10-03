@@ -84,6 +84,8 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
             updateTrackList(it)
         }
 
+        viewModel.searchDebounce(savedText)
+
         binding.updateSearch.setOnClickListener {
             binding.placeholderSearchGroup.isVisible = false
             binding.updateSearch.isVisible = false
