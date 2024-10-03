@@ -24,11 +24,11 @@ class HistoryTrackRepositoryImpl(
     override suspend fun getHistoryTracks(): Flow<List<Track>> = flow {
         val trackIdSet = appDatabase.trackFavouriteDao().getIdTracks().toSet()
         val tracks = appDatabase.historyTrackDao().getTracks()
-        tracks.map { track ->
+        val result = tracks.map { track ->
             val isFavorite = trackIdSet.contains(track.trackId)
             track.copy(isFavorite = isFavorite)
         }
-        emit(convertFromTrackEntity(tracks))
+        emit(convertFromTrackEntity(result))
     }
 
     private fun convertFromTrackEntity(tracks: List<HistoryTrackEntity>): List<Track> {

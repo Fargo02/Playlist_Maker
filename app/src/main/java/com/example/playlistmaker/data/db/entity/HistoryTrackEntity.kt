@@ -2,9 +2,8 @@ package com.example.playlistmaker.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.playlistmaker.data.db.entity.HistoryTrackEntity.Companion.TABLE_HISTORY_NAME
 
-@Entity(tableName = TABLE_HISTORY_NAME)
+@Entity(tableName = "history_track_name")
 data class HistoryTrackEntity(
     @PrimaryKey
     val trackId: Long,
@@ -19,8 +18,4 @@ data class HistoryTrackEntity(
     val previewUrl: String? = null,
     var isFavorite: Boolean,
     val currentTime: String,
-) {
-    companion object {
-        const val TABLE_HISTORY_NAME = "history_track_name"
-    }
-}
+)

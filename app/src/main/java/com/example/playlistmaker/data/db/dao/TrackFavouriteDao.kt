@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.playlistmaker.data.db.entity.TrackEntity
-import com.example.playlistmaker.data.db.entity.TrackEntity.Companion.TABLE_NAME
 
 @Dao
 interface TrackFavouriteDao {
@@ -17,9 +16,9 @@ interface TrackFavouriteDao {
     @Delete
     suspend fun deleteTrack(track: TrackEntity)
 
-    @Query("SELECT * FROM $TABLE_NAME ORDER BY currentTime DESC" )
+    @Query("SELECT * FROM track_name ORDER BY currentTime DESC" )
     suspend fun getTracks(): List<TrackEntity>
 
-    @Query("SELECT trackId FROM $TABLE_NAME")
+    @Query("SELECT trackId FROM track_name")
     suspend fun getIdTracks(): List<Long>
 }
