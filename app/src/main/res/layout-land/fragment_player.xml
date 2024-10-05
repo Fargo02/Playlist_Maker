@@ -40,10 +40,9 @@
             app:barrierDirection="end" />
         <Toolbar
             android:id="@+id/buttonBack"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/toolbar"
-            android:layout_marginBottom="@dimen/small_mark"
+            style="@style/toolbar_player"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
         <ImageView
@@ -89,7 +88,8 @@
             tool:text="The Beatles"/>
         <ImageButton
             android:id="@+id/buttonAddToList"
-            android:layout_width="51dp"
+            style="@style/player_another_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/radius_btn_54dp"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -97,25 +97,29 @@
             app:layout_constraintTop_toBottomOf="@id/artistName"
             app:layout_constraintEnd_toStartOf="@+id/buttonPlay"
             android:background="@drawable/button_add_to_list_off"/>
+
         <ImageButton
             android:id="@+id/buttonPlay"
             style="@style/player_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mark_30dp"
+            android:layout_marginTop="@dimen/mark_38dp"
             app:layout_constraintStart_toEndOf="@id/buttonAddToList"
             app:layout_constraintTop_toBottomOf="@id/artistName"
             app:layout_constraintEnd_toStartOf="@+id/buttonLike"
             android:background="@drawable/button_play_off"/>
+
         <ImageButton
             android:id="@+id/buttonLike"
-            android:layout_width="51dp"
+            style="@style/button_like"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/radius_btn_54dp"
+            android:importantForAccessibility="no"
+            tool:src="@drawable/ic_like_off"
             app:layout_constraintStart_toEndOf="@id/buttonPlay"
             app:layout_constraintTop_toBottomOf="@id/artistName"
-            app:layout_constraintEnd_toStartOf="@+id/right_guideline_24dp"
-            android:background="@drawable/ic_like_off"/>
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline_24dp" />
         <TextView
             android:id="@+id/playingTime"
             style="@style/textColor"

@@ -13,7 +13,9 @@ import com.example.playlistmaker.domain.player.PlayerState.PAUSED
 import com.example.playlistmaker.domain.player.PlayerState.PLAYING
 import com.example.playlistmaker.domain.player.PlayerState.PREPARED
 import com.example.playlistmaker.domain.search.model.Track
-import com.example.playlistmaker.ui.library.view_model.FavouriteState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -22,9 +24,11 @@ class PlayerViewModel(
     url: String
 ): ViewModel() {
 
+    private var timerJob: Job? = null
+
     var listener = object : PlayerInteractor.OnStateChangeListener {
         override fun onChange(state: PlayerState) {
-            playerStateListener.postValue(state)
+            playerStateListener.value = state
             when (state) {
                 PREPARED -> {
                     playerInteractor.play()
@@ -33,6 +37,7 @@ class PlayerViewModel(
                     playerInteractor.play()
                 }
                 PAUSED -> {
+                    timerJob?.cancel()
                     playerInteractor.pause()
                 }
                 DEFAULT -> Log.i("playerState", "$state")
@@ -50,16 +55,19 @@ class PlayerViewModel(
     private val favouriteState = MutableLiveData<Boolean>()
     fun observeFavouriteState(): LiveData<Boolean> = favouriteState
 
-    fun getCurrentTime(): String {
-        return playerInteractor.getCurrentTime()
-    }
 
-    fun getRelease() {
-        playerInteractor.release()
-    }
+    private val currentTimeListener = MutableLiveData<String>()
+    fun observeCurrentTimeListener(): LiveData<String> = currentTimeListener
 
-    fun isPlaying(): Boolean {
-        return playerInteractor.isPlaying()
+    fun updateCurrentTime() {
+        viewModelScope.launch(Dispatchers.Main) {
+            while (playerInteractor.isPlaying()) {
+                val currentTime = playerInteractor.getCurrentTime()
+                currentTimeListener.value = currentTime
+                delay(DELAY)
+            }
+        }
+
     }
 
     fun onFavoriteClicked(track: Track) {
@@ -76,4 +84,14 @@ class PlayerViewModel(
     private fun renderState(isFavourite: Boolean) {
         favouriteState.postValue(isFavourite)
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        playerInteractor.release()
+    }
+
+    companion object {
+        private const val DELAY = 400L
+    }
+
 }
