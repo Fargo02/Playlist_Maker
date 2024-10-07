@@ -19,7 +19,7 @@ class TrackAdapter(private val clickListener: TrackClickListener): RecyclerView.
     override fun getItemCount(): Int {
         return tracks.size
     }
-    interface TrackClickListener {
+    fun interface TrackClickListener {
         fun onTrackClick(track: Track)
     }
 }

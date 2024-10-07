@@ -107,4 +107,7 @@
         <item name="android:background">@color/white</item>
     </style>
 
+    <style name="button_like">
+        <item name="android:background">@drawable/ic_bgr_like_leght</item>
+    </style>
 </resources>    

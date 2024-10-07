@@ -19,6 +19,7 @@ import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.ui.player.fragment.PlayerFragment
 import com.example.playlistmaker.ui.search.GetTrackListModel
+import com.example.playlistmaker.ui.search.view_model.HistoryState
 import com.example.playlistmaker.ui.search.view_model.SaveTracksState
 import com.example.playlistmaker.ui.search.view_model.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
@@ -54,18 +55,16 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
             val json = Gson().toJson(track)
             findNavController().navigate(R.id.action_searchFragment_to_playerFragment,
                 PlayerFragment.createArgs(json))
-            viewModel.updateTrack(track, tracks)
+            viewModel.updateTrack(track)
+            onDestroy()
         }
 
-        trackAdapter = TrackAdapter(
-            object : TrackAdapter.TrackClickListener {
-                override fun onTrackClick(track: Track) {
-                    val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-                    inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
-                    onTrackClickDebounce(track)
-                }
-            }
-        )
+        trackAdapter = TrackAdapter { track ->
+            val inputMethodManager =
+                requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
+            onTrackClickDebounce(track)
+        }
 
         trackAdapter?.tracks = tracks
         binding.tracksList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -79,9 +78,11 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
             render(it)
         }
 
-        viewModel.observeGetTrackList().observe(viewLifecycleOwner) {
-            updateTrackList(it)
+        viewModel.observeHistoryTrackListener().observe(viewLifecycleOwner) {
+            historyRender(it)
         }
+
+        viewModel.searchDebounce(savedText)
 
         binding.updateSearch.setOnClickListener {
             binding.placeholderSearchGroup.isVisible = false
@@ -98,7 +99,7 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         }
 
         binding.inputEditText.setOnFocusChangeListener { _, _ ->
-            viewModel.getTrackFromSharedPreferences(true, savedText)
+            viewModel.getHistoryTracks( savedText)
         }
 
         binding.clearIcon.setOnClickListener {
@@ -111,7 +112,7 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
             binding.cleanHistory.isVisible = false
             binding.placeholderSearchGroup.isVisible = false
             binding.updateSearch.isVisible = false
-            viewModel.getTrackFromSharedPreferences(true, savedText)
+            viewModel.getHistoryTracks(savedText)
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -133,7 +134,7 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
 
                 viewModel.searchDebounce(changedText = s?.toString() ?: "")
 
-                viewModel.getTrackFromSharedPreferences(!checkVisibility, savedText)
+                viewModel.getHistoryTracks(savedText)
             }
 
             override fun afterTextChanged(s: Editable?) { }
@@ -144,22 +145,6 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
     override fun onDestroyView() {
         super.onDestroyView()
         trackAdapter = null
-    }
-
-    private fun updateTrackList(state: SaveTracksState){
-        when (state) {
-            is SaveTracksState.Content -> showSaveTracks(state.tracks)
-            is SaveTracksState.Empty -> Log.i("empty", "empty")
-        }
-
-    }
-
-    private fun showSaveTracks(trackListData: GetTrackListModel){
-        binding.cleanHistory.isVisible = trackListData.isVisible
-        binding.youSearch.isVisible = trackListData.isVisible
-        tracks.clear()
-        tracks.addAll(trackListData.trackList)
-        trackAdapter?.notifyDataSetChanged()
     }
 
     private fun removeAndPutTrack(track: Track) {
@@ -207,6 +192,30 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
             is SearchState.Error -> showError()
             is SearchState.Empty -> showEmpty()
         }
+    }
+
+    private fun historyRender(state: HistoryState) {
+        when (state) {
+            is HistoryState.Content -> showContentHistory(state.tracks)
+            is HistoryState.Empty -> showEmptyHistory()
+        }
+    }
+
+    private fun showContentHistory(tracks: List<Track>) {
+        binding.cleanHistory.isVisible = true
+        binding.youSearch.isVisible = true
+        binding.tracksList.isVisible = true
+        trackAdapter?.tracks?.clear()
+        trackAdapter?.tracks?.addAll(tracks)
+        trackAdapter?.notifyDataSetChanged()
+    }
+
+    private fun showEmptyHistory() {
+        binding.cleanHistory.isVisible = false
+        binding.youSearch.isVisible = false
+        binding.tracksList.isVisible = false
+        trackAdapter?.tracks?.clear()
+        trackAdapter?.notifyDataSetChanged()
     }
 
     companion object {

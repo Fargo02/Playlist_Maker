@@ -1,22 +1,19 @@
 package com.example.playlistmaker.ui.search.view_model
 
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.model.Track
-import com.example.playlistmaker.domain.sharing.history.SharingHistoryTrackInteractor
+import com.example.playlistmaker.domain.history.HistoryTrackInteractor
 import com.example.playlistmaker.ui.search.GetTrackListModel
 import com.example.playlistmaker.utils.debounce
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val sharedInteractor : SharingHistoryTrackInteractor,
+    private val historyTrackInteractor : HistoryTrackInteractor,
     private val searchInteractor: TracksInteractor
 ): ViewModel() {
 
@@ -30,37 +27,43 @@ class SearchViewModel(
         latestSearchText?.let { requestToServer(it) }
     }
 
-    private val getTrackList = MutableLiveData<SaveTracksState>()
-    fun observeGetTrackList(): LiveData<SaveTracksState> = getTrackList
-
     private val onTrackClicked = MutableLiveData<Track>()
     fun observeOnTrackClicked(): LiveData<Track> = onTrackClicked
 
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState() : LiveData<SearchState> = stateLiveData
 
-    //имеет ли смысл использовать здесь корутин?
-    fun getTrackFromSharedPreferences(isVisibility: Boolean, savedText: String){
-        viewModelScope.launch {
-            if (sharedInteractor.getList().isNotEmpty() && savedText == "") {
-                getTrackList.postValue(SaveTracksState.Content(GetTrackListModel(sharedInteractor.getList(), isVisibility)))
-            } else {
-                getTrackList.postValue(SaveTracksState.Empty)
+    private val historyTrackListener = MutableLiveData<HistoryState>()
+    fun observeHistoryTrackListener() : LiveData<HistoryState> = historyTrackListener
+
+
+    fun getHistoryTracks(savedText: String) {
+        if (savedText == "") {
+
+            viewModelScope.launch {
+                historyTrackInteractor
+                    .getHistoryTracks()
+                    .collect {
+                        processHistoryResult(it)
+                    }
             }
         }
     }
 
-    fun updateTrack(track: Track, tracksList: List<Track>) {
-        if (sharedInteractor.getList() == tracksList) {
-            onTrackClicked.postValue(track)
-            sharedInteractor.addTrack(track)
-        } else {
-            sharedInteractor.addTrack(track)
+
+    fun updateTrack(track: Track) {
+        viewModelScope.launch {
+            historyTrackInteractor.insertTrack(track)
+            renderHistoryState(
+                HistoryState.Empty
+            )
         }
     }
 
     fun clearHistory() {
-        sharedInteractor.clearHistory()
+        viewModelScope.launch {
+            historyTrackInteractor.deleteAllTracks()
+        }
     }
 
     fun searchDebounce(changedText: String) {
@@ -84,6 +87,17 @@ class SearchViewModel(
         }
     }
 
+    private fun processHistoryResult(foundTracks: List<Track>?) {
+        renderHistoryState(
+            if (foundTracks.isNullOrEmpty()) HistoryState.Empty
+            else HistoryState.Content(foundTracks)
+        )
+    }
+
+    private fun renderHistoryState(state: HistoryState) {
+        historyTrackListener.postValue(state)
+    }
+
     private fun processResult(foundTracks: List<Track>?, errorMessage: String?) {
         val tracks = mutableListOf<Track>()
 
@@ -98,7 +112,9 @@ class SearchViewModel(
                 )
             }
             tracks.isEmpty() -> {
-                SearchState.Empty
+                renderState(
+                    SearchState.Empty
+                )
             }
             else -> {
                 renderState(

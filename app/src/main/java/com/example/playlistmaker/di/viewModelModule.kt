@@ -20,7 +20,7 @@ val viewModelModule = module {
     }
 
     viewModel { params ->
-        PlayerViewModel(get(), params.get())
+        PlayerViewModel(get(), get(), params.get())
     }
 
     viewModel {
@@ -28,7 +28,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        FavouriteTracksViewModel()
+        FavouriteTracksViewModel(get())
     }
 
     viewModel {

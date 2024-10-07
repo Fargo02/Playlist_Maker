@@ -109,4 +109,8 @@
         <item name="android:background">@color/dark</item>
     </style>
 
+    <style name="button_like">
+        <item name="android:background">@drawable/ic_bgr_like_dark</item>
+    </style>
+
 </resources>

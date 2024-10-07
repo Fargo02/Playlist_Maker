@@ -35,6 +35,7 @@
     <string name="media_library_fragment">MediaLibraryFragment</string>
     <string name="settings_fragment">SettingsFragment</string>
     <string name="player_fragment">PlayerFragment</string>
+    <string name="empty_media_library">Ваша медиатека пуста</string>
 
 
 
