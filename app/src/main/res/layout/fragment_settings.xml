@@ -19,7 +19,7 @@
         style="@style/switchSettings"
         android:id="@+id/themeSwitcher"
         android:text="@string/dark_theme"
-        android:textSize="@dimen/middle_size_text"
+        android:textSize="@dimen/mark_16sp"
         android:paddingStart="@dimen/middle_mark"
         android:paddingTop="@dimen/padding_list"
         android:paddingBottom="@dimen/padding_list"

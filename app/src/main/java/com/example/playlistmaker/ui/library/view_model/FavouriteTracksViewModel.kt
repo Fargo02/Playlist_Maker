@@ -18,9 +18,7 @@ class FavouriteTracksViewModel(
         viewModelScope.launch {
             favouritesInteractor
                 .getFavouritesTracks()
-                .collect {
-                    processResult(it)
-                }
+                .collect { processResult(it) }
         }
     }
 

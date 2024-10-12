@@ -79,6 +79,8 @@ class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
     private fun showEmpty() {
         binding.placeholderGroup.isVisible = true
         binding.tracksList.isVisible = false
+        trackAdapter?.tracks?.clear()
+        trackAdapter?.notifyDataSetChanged()
     }
 
     companion object {

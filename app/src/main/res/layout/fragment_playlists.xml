@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background_white">
 
     <androidx.constraintlayout.widget.Group
@@ -10,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_tags="imagePlaceholder,textPlaceholder, createNewPlaylist"/>
+        app:constraint_referenced_tags="imagePlaceholder,textPlaceholder"/>
     <Button
         android:id="@+id/createNewPlaylist"
         app:layout_constraintTag="createNewPlaylist"
@@ -22,7 +23,7 @@
         android:insetTop="@dimen/clear_mark"
         android:insetBottom="@dimen/clear_mark"
         android:text="@string/new_playlist"
-        android:textSize="@dimen/text_size_14sp"
+        android:textSize="@dimen/mark_14sp"
         android:textAllCaps="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,10 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/mark_46dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/createNewPlaylist"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/createNewPlaylist" />
     <TextView
         android:id="@+id/textPlaceholder"
         app:layout_constraintTag="textPlaceholder"
@@ -51,8 +51,23 @@
         android:textSize="@dimen/text_19sp"
         android:text="@string/no_playlists"
         android:layout_marginTop="@dimen/middle_mark"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imagePlaceholder"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/clear_mark"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:clipToPadding="false"
+        android:layout_marginBottom="@dimen/mark_16dp"
+        tools:itemCount="5"
+        app:spanCount="2"
+        tools:listitem="@layout/playlist_item"
+        app:layout_constraintTop_toBottomOf="@id/createNewPlaylist"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

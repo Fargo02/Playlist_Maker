@@ -13,11 +13,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/small_mark"
         android:layout_marginStart="@dimen/mark_13dp"
-        android:src="@drawable/placeholder"/>
+        android:src="@drawable/track_placeholder"/>
     <FrameLayout
+        android:layout_width="0dp"
         android:layout_weight="1"
         android:paddingTop="@dimen/mark_6dp"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Smells Like Teen Spirit"
-            android:textSize="@dimen/middle_size_text"
+            android:textSize="@dimen/mark_16sp"
             android:textColor="@color/black"
             android:fontFamily="@font/ys_display_regular"
             android:ellipsize="end"
