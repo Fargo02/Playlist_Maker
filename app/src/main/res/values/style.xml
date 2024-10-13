@@ -125,4 +125,15 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="dialogView" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="colorSurface">@color/white</item>
+        <item name="buttonBarPositiveButtonStyle">@style/buttonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/buttonStyle</item>
+    </style>
+
+    <style name="buttonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/blue</item>
+        <item name="rippleColor">@color/grey</item>
+    </style>
+
 </resources>    
