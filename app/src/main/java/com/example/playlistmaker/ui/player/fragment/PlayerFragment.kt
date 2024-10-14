@@ -26,11 +26,11 @@ import com.example.playlistmaker.ui.player.ui.PlayerPlaylistAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.ui.player.view_model.PlaylistState
 import com.example.playlistmaker.utils.BindingFragment
+import com.example.playlistmaker.utils.debounce
 import com.example.playlistmaker.utils.showSnackbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -47,6 +47,8 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
     private var playlists = ArrayList<Playlist>()
 
     private var playlistAdapter: PlayerPlaylistAdapter? = null
+
+    private lateinit var onPlaylistClickDebounce: (Playlist) -> Unit
 
     override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentPlayerBinding {
         return FragmentPlayerBinding.inflate(inflater, container, false)
@@ -71,7 +73,7 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
 
         binding.buttonPlay.isEnabled = false
 
-        playlistAdapter = PlayerPlaylistAdapter { playlist ->
+        onPlaylistClickDebounce = debounce<Playlist>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { playlist ->
             if(playlist.trackList.contains(currentTrack.trackId.toString())) {
                 showSnackbar(requireView(), requireContext(), playlist.name, R.string.alredy_add)
             } else {
@@ -79,6 +81,10 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
                 showSnackbar(requireView(), requireContext(), playlist.name, R.string.added_to_playlist)
                 viewModel.getPlaylist()
             }
+        }
+
+        playlistAdapter = PlayerPlaylistAdapter { playlist ->
+            onPlaylistClickDebounce(playlist)
         }
 
         playlistAdapter?.playlists = playlists
@@ -221,6 +227,7 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
 
     companion object{
 
+        private const val CLICK_DEBOUNCE_DELAY = 200L
         private const val CURRENT_TRACK = "current_track"
 
         fun createArgs(track: String): Bundle =

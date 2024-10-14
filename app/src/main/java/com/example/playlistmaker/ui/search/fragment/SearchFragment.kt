@@ -57,8 +57,7 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         }
 
         trackAdapter = TrackAdapter { track ->
-            val inputMethodManager =
-                requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
             onTrackClickDebounce(track)
         }
