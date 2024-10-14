@@ -4,22 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.domain.playlist.model.Playlist
-import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.ui.library.ui.PlaylistAdapter
-import com.example.playlistmaker.ui.library.view_model.PlaylistState
 import com.example.playlistmaker.ui.library.view_model.PlaylistsViewModel
-import com.example.playlistmaker.ui.search.view_model.SearchState
-import com.example.playlistmaker.ui.ui.TrackAdapter
 import com.example.playlistmaker.utils.BindingFragment
+import com.example.playlistmaker.utils.ScreenState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment(): BindingFragment<FragmentPlaylistsBinding>() {
@@ -73,10 +67,10 @@ class PlaylistsFragment(): BindingFragment<FragmentPlaylistsBinding>() {
         playlistAdapter?.notifyDataSetChanged()
     }
 
-    private fun render(state: PlaylistState) {
+    private fun render(state: ScreenState<out List<Playlist>>) {
         when (state) {
-            is PlaylistState.Content -> showContent(state.playlists)
-            is PlaylistState.Empty -> showEmpty()
+            is ScreenState.Content -> showContent(state.data)
+            is ScreenState.Empty -> showEmpty()
         }
     }
 

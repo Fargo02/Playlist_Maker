@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingTop="@dimen/small_mark"
-    android:paddingBottom="@dimen/small_mark"
+    android:paddingTop="@dimen/mark_8dp"
+    android:paddingBottom="@dimen/mark_8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?attr/selectableItemBackground"
@@ -11,7 +11,7 @@
         android:id="@+id/cover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/small_mark"
+        android:layout_marginEnd="@dimen/mark_8dp"
         android:layout_marginStart="@dimen/mark_13dp"
         android:src="@drawable/track_placeholder"/>
     <FrameLayout
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Smells Like Teen Spirit"
-            android:textSize="@dimen/mark_16sp"
+            android:textSize="@dimen/text_mark_16sp"
             android:textColor="@color/black"
             android:fontFamily="@font/ys_display_regular"
             android:ellipsize="end"
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="150"
-                android:textSize="@dimen/small_size_text_11"
+                android:textSize="@dimen/text_mark_11sp"
                 android:fontFamily="@font/ys_display_regular"/>
             <TextView
                 style="@style/out_of_size"
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="треков"
-                android:textSize="@dimen/small_size_text_11"
+                android:textSize="@dimen/text_mark_11sp"
                 android:fontFamily="@font/ys_display_regular"/>
         </LinearLayout>
     </FrameLayout>

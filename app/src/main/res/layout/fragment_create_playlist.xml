@@ -45,8 +45,8 @@
 
         <LinearLayout
             android:id="@+id/cover"
-            android:layout_width="@dimen/clear_mark"
-            android:layout_height="@dimen/clear_mark"
+            android:layout_width="@dimen/mark_0dp"
+            android:layout_height="@dimen/mark_0dp"
             android:layout_marginTop="@dimen/mark_26dp"
             tools:layout_height="312dp"
             android:background="@drawable/share_cover_border"
@@ -76,7 +76,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputEditTextNameLayout"
             style="@style/customOutlineBox"
-            android:layout_width="@dimen/clear_mark"
+            android:layout_width="@dimen/mark_0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mark_32dp"
             android:hint="@string/name"
@@ -92,7 +92,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputEditTextDescriptionLayout"
             style="@style/customOutlineBox"
-            android:layout_width="@dimen/clear_mark"
+            android:layout_width="@dimen/mark_0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mark_16dp"
             android:hint="@string/description"
@@ -110,15 +110,15 @@
 
         <Button
             android:id="@+id/bottomCreate"
-            android:layout_width="@dimen/clear_mark"
+            android:layout_width="@dimen/mark_0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mark_32dp"
             android:layout_marginBottom="@dimen/mark_32dp"
-            android:insetTop="@dimen/clear_mark"
-            android:insetBottom="@dimen/clear_mark"
+            android:insetTop="@dimen/mark_0dp"
+            android:insetBottom="@dimen/mark_0dp"
             android:text="@string/create"
             android:textColor="@color/white"
-            android:textSize="@dimen/mark_14sp"
+            android:textSize="@dimen/text_mark_14sp"
             android:textAllCaps="false"
             app:cornerRadius="@dimen/mark_8dp"
             android:backgroundTint="@color/grey"

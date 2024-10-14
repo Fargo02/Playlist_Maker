@@ -57,8 +57,8 @@
 
             <ImageView
                 android:id="@+id/cover"
-                android:layout_width="@dimen/clear_mark"
-                android:layout_height="@dimen/clear_mark"
+                android:layout_width="@dimen/mark_0dp"
+                android:layout_height="@dimen/mark_0dp"
                 android:layout_marginTop="@dimen/mark_26dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintDimensionRatio="1:1"
@@ -71,22 +71,22 @@
             <TextView
                 android:id="@+id/trackName"
                 style="@style/textColor"
-                android:layout_width="@dimen/clear_mark"
+                android:layout_width="@dimen/mark_0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/toolbar_and_image_mark"
+                android:layout_marginTop="@dimen/mark_24dp"
                 app:layout_constraintTop_toBottomOf="@id/cover"
                 app:layout_constraintStart_toEndOf="@id/start_guideline_24dp"
                 app:layout_constraintEnd_toStartOf="@id/end_guideline_24dp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textSize="@dimen/big_size_text"
+                android:textSize="@dimen/text_mark_22sp"
                 android:fontFamily="@font/ys_display_medium"
                 android:textFontWeight="400"
                 tool:text="Yesterday (Remastered 2009)"/>
             <TextView
                 android:id="@+id/artistName"
                 style="@style/textColor"
-                android:layout_width="@dimen/clear_mark"
+                android:layout_width="@dimen/mark_0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/mark_12dp"
                 app:layout_constraintTop_toBottomOf="@id/trackName"
@@ -94,7 +94,7 @@
                 app:layout_constraintEnd_toStartOf="@id/end_guideline_24dp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textSize="@dimen/mark_14sp"
+                android:textSize="@dimen/text_mark_14sp"
                 android:fontFamily="@font/ys_display_medium"
                 android:textFontWeight="400"
                 tool:text="The Beatles"/>
@@ -103,7 +103,7 @@
                 style="@style/player_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/radius_btn_54dp"
+                android:layout_marginTop="@dimen/mark_54dp"
                 tool:src="@drawable/ic_add_to_list_off"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="@id/start_guideline_24dp"
@@ -124,7 +124,7 @@
                 style="@style/player_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/radius_btn_54dp"
+                android:layout_marginTop="@dimen/mark_54dp"
                 android:importantForAccessibility="no"
                 tool:src="@drawable/ic_like_off"
                 app:layout_constraintStart_toEndOf="@id/buttonPlay"
@@ -139,7 +139,7 @@
                 app:layout_constraintTop_toBottomOf="@id/buttonPlay"
                 app:layout_constraintStart_toEndOf="@id/start_guideline_24dp"
                 app:layout_constraintEnd_toStartOf="@id/end_guideline_24dp"
-                android:textSize="@dimen/mark_14sp"
+                android:textSize="@dimen/text_mark_14sp"
                 tool:text="0:39"/>
 
             <TextView
@@ -152,7 +152,7 @@
                 android:textColor="@color/grey"
                 app:layout_constraintStart_toEndOf="@id/left_guideline_16dp"
                 app:layout_constraintTop_toBottomOf="@id/playingTime"
-                android:textSize="@dimen/text_size_13sp"
+                android:textSize="@dimen/text_mark_13sp"
                 android:text="@string/duration"/>
             <TextView
                 android:id="@+id/album"
@@ -164,7 +164,7 @@
                 app:layout_constraintStart_toEndOf="@id/left_guideline_16dp"
                 app:layout_constraintTop_toBottomOf="@id/duration"
                 android:textColor="@color/grey"
-                android:textSize="@dimen/text_size_13sp"
+                android:textSize="@dimen/text_mark_13sp"
                 android:text="@string/album"/>
             <TextView
                 android:id="@+id/year"
@@ -186,7 +186,7 @@
                 app:layout_constraintTop_toBottomOf="@id/year"
                 android:textColor="@color/grey"
                 android:textAlignment="textStart"
-                android:textSize="@dimen/text_size_13sp"
+                android:textSize="@dimen/text_mark_13sp"
                 android:text="@string/genre"/>
             <TextView
                 android:id="@+id/country"
@@ -199,60 +199,60 @@
                 android:layout_marginBottom="@dimen/mark_20dp"
                 android:textColor="@color/grey"
                 android:textAlignment="textStart"
-                android:textSize="@dimen/text_size_13sp"
+                android:textSize="@dimen/text_mark_13sp"
                 android:text="@string/country"/>
 
             <TextView
                 android:id="@+id/trackTime"
                 style="@style/track_information"
-                android:layout_width="@dimen/clear_mark"
+                android:layout_width="@dimen/mark_0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/duration"
                 app:layout_constraintEnd_toStartOf="@id/right_guideline_16dp"
                 app:layout_constraintStart_toEndOf="@id/textsBarrier"
-                android:textSize="@dimen/text_size_13sp"
+                android:textSize="@dimen/text_mark_13sp"
                 tool:text="5:34"/>
             <TextView
                 android:id="@+id/albumName"
                 app:layout_constraintTag="albumNameTag"
                 style="@style/track_information"
-                android:layout_width="@dimen/clear_mark"
+                android:layout_width="@dimen/mark_0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/trackTime"
                 app:layout_constraintEnd_toStartOf="@id/right_guideline_16dp"
                 app:layout_constraintStart_toEndOf="@id/textsBarrier"
-                android:textSize="@dimen/text_size_13sp"
+                android:textSize="@dimen/text_mark_13sp"
                 tool:text="Yesterday (Remastered 2009)"/>
             <TextView
                 android:id="@+id/trackYear"
                 style="@style/track_information"
-                android:layout_width="@dimen/clear_mark"
+                android:layout_width="@dimen/mark_0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/albumName"
                 app:layout_constraintEnd_toStartOf="@id/right_guideline_16dp"
                 app:layout_constraintStart_toEndOf="@id/textsBarrier"
-                android:textSize="@dimen/text_size_13sp"
+                android:textSize="@dimen/text_mark_13sp"
                 tool:text="1965"/>
             <TextView
                 android:id="@+id/trackGenre"
                 style="@style/track_information"
-                android:layout_width="@dimen/clear_mark"
+                android:layout_width="@dimen/mark_0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/trackYear"
                 app:layout_constraintEnd_toStartOf="@id/right_guideline_16dp"
                 app:layout_constraintStart_toEndOf="@id/textsBarrier"
-                android:textSize="@dimen/text_size_13sp"
+                android:textSize="@dimen/text_mark_13sp"
                 tool:text="Rock"/>
             <TextView
                 android:id="@+id/trackCountry"
                 style="@style/track_information"
-                android:layout_width="@dimen/clear_mark"
+                android:layout_width="@dimen/mark_0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/trackGenre"
                 app:layout_constraintEnd_toStartOf="@id/right_guideline_16dp"
                 app:layout_constraintStart_toEndOf="@id/textsBarrier"
                 android:layout_marginBottom="@dimen/mark_20dp"
-                android:textSize="@dimen/text_size_13sp"
+                android:textSize="@dimen/text_mark_13sp"
                 tool:text="Великобритания"/>
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/albumGroup"
@@ -298,11 +298,11 @@
             app:layout_constraintTag="textPlaceholder"
             style="@style/placeHolderTextTrackList"
             android:layout_gravity="center"
-            android:layout_width="@dimen/clear_mark"
+            android:layout_width="@dimen/mark_0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ys_display_medium"
             android:textAlignment="center"
-            android:textSize="@dimen/text_19sp"
+            android:textSize="@dimen/text_mark_19sp"
             android:text="@string/add_to_playlist"
             android:layout_marginTop="@dimen/mark_30dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -314,13 +314,13 @@
             app:layout_constraintTag="createNewPlaylist"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/mark_36dp"
-            android:layout_marginTop="@dimen/big_margin"
+            android:layout_marginTop="@dimen/mark_24dp"
             android:backgroundTint="@color/black"
-            app:cornerRadius="@dimen/radius_btn_54dp"
-            android:insetTop="@dimen/clear_mark"
-            android:insetBottom="@dimen/clear_mark"
+            app:cornerRadius="@dimen/mark_54dp"
+            android:insetTop="@dimen/mark_0dp"
+            android:insetBottom="@dimen/mark_0dp"
             android:text="@string/new_playlist"
-            android:textSize="@dimen/mark_14sp"
+            android:textSize="@dimen/text_mark_14sp"
             android:textAllCaps="false"
             app:layout_constraintTop_toBottomOf="@id/textSheetBehavior"
             app:layout_constraintStart_toStartOf="parent"
@@ -328,8 +328,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlists"
-            android:layout_width="@dimen/clear_mark"
-            android:layout_height="@dimen/clear_mark"
+            android:layout_width="@dimen/mark_0dp"
+            android:layout_height="@dimen/mark_0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:clipToPadding="false"
             android:layout_marginBottom="@dimen/mark_16dp"

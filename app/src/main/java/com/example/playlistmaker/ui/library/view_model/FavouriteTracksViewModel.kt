@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourites.FavouritesInteractor
-import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.search.model.Track
-import com.example.playlistmaker.ui.search.view_model.SearchState
+import com.example.playlistmaker.utils.ScreenState
 import kotlinx.coroutines.launch
 
 class FavouriteTracksViewModel(
@@ -22,20 +21,18 @@ class FavouriteTracksViewModel(
         }
     }
 
-    private val favouriteState = MutableLiveData<FavouriteState>()
-    fun observeFavouriteState(): LiveData<FavouriteState> = favouriteState
+    private val favouriteState = MutableLiveData<ScreenState<out List<Track>>>()
+    fun observeFavouriteState(): LiveData<ScreenState<out List<Track>>> = favouriteState
 
 
     private fun processResult(foundTracks: List<Track>?) {
-
         renderState(
-            if (foundTracks.isNullOrEmpty()) FavouriteState.Empty
-            else FavouriteState.Content(tracks = foundTracks)
+            if (foundTracks.isNullOrEmpty()) ScreenState.Empty
+            else ScreenState.Content(foundTracks)
         )
-
     }
 
-    private fun renderState(state: FavouriteState) {
+    private fun renderState(state: ScreenState<out List<Track>>) {
         favouriteState.postValue(state)
     }
 }

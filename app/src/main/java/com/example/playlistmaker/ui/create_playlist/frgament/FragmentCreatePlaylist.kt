@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources.getColorStateList
@@ -127,11 +128,9 @@ class FragmentCreatePlaylist(): BindingFragment<FragmentCreatePlaylistBinding>()
             findNavController().popBackStack()
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                showConfirmDialog()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            confirmDialog.show()
+        }
     }
 
     private fun showConfirmDialog() {

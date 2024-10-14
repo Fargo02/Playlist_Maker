@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.playlist.model.Playlist
-import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.utils.ScreenState
 import kotlinx.coroutines.launch
 
 class PlaylistsViewModel(
@@ -23,19 +23,19 @@ class PlaylistsViewModel(
         }
     }
 
-    private val stateLiveData = MutableLiveData<PlaylistState>()
-    fun observerStateLiveData() : LiveData<PlaylistState> = stateLiveData
+    private val stateLiveData = MutableLiveData<ScreenState<out List<Playlist>>>()
+    fun observerStateLiveData() : LiveData<ScreenState<out List<Playlist>>> = stateLiveData
 
     private fun processResult(foundTracks: List<Playlist>?) {
 
         renderState(
-            if (foundTracks.isNullOrEmpty()) PlaylistState.Empty
-            else PlaylistState.Content(playlists = foundTracks)
+            if (foundTracks.isNullOrEmpty()) ScreenState.Empty
+            else ScreenState.Content(foundTracks)
         )
 
     }
 
-    private fun renderState(state: PlaylistState) {
+    private fun renderState(state: ScreenState<out List<Playlist>>) {
         stateLiveData.postValue(state)
     }
 }

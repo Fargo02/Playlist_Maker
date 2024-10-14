@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.domain.history.HistoryTrackInteractor
-import com.example.playlistmaker.ui.search.GetTrackListModel
+import com.example.playlistmaker.utils.ScreenState
 import com.example.playlistmaker.utils.debounce
 import kotlinx.coroutines.launch
 
@@ -33,13 +33,12 @@ class SearchViewModel(
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState() : LiveData<SearchState> = stateLiveData
 
-    private val historyTrackListener = MutableLiveData<HistoryState>()
-    fun observeHistoryTrackListener() : LiveData<HistoryState> = historyTrackListener
+    private val historyTrackListener = MutableLiveData<ScreenState<out List<Track>>>()
+    fun observeHistoryTrackListener() : LiveData<ScreenState<out List<Track>>> = historyTrackListener
 
 
     fun getHistoryTracks(savedText: String) {
         if (savedText == "") {
-
             viewModelScope.launch {
                 historyTrackInteractor
                     .getHistoryTracks()
@@ -47,6 +46,8 @@ class SearchViewModel(
                         processHistoryResult(it)
                     }
             }
+        } else {
+            renderHistoryState(ScreenState.Empty)
         }
     }
 
@@ -55,7 +56,7 @@ class SearchViewModel(
         viewModelScope.launch {
             historyTrackInteractor.insertTrack(track)
             renderHistoryState(
-                HistoryState.Empty
+                ScreenState.Empty
             )
         }
     }
@@ -89,12 +90,12 @@ class SearchViewModel(
 
     private fun processHistoryResult(foundTracks: List<Track>?) {
         renderHistoryState(
-            if (foundTracks.isNullOrEmpty()) HistoryState.Empty
-            else HistoryState.Content(foundTracks)
+            if (foundTracks.isNullOrEmpty()) ScreenState.Empty
+            else ScreenState.Content(foundTracks)
         )
     }
 
-    private fun renderHistoryState(state: HistoryState) {
+    private fun renderHistoryState(state: ScreenState<out List<Track>>) {
         historyTrackListener.postValue(state)
     }
 
