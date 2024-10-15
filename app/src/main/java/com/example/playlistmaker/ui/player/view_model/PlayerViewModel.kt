@@ -15,6 +15,7 @@ import com.example.playlistmaker.domain.player.PlayerState.PREPARED
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.playlist.model.Playlist
 import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.utils.ScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -61,13 +62,13 @@ class PlayerViewModel(
     private val currentTimeListener = MutableLiveData<String>()
     fun observeCurrentTimeListener(): LiveData<String> = currentTimeListener
 
-    private val playlistStateListener = MutableLiveData<PlaylistState>()
-    fun observePlaylistStateListener(): LiveData<PlaylistState> = playlistStateListener
+    private val playlistStateListener = MutableLiveData<ScreenState<out List<Playlist>>>()
+    fun observePlaylistStateListener(): LiveData<ScreenState<out List<Playlist>>> = playlistStateListener
 
 
-    fun insertTrack(track: Track, trackList: String, playlistId: Int) {
+    fun insertTrack(track: Track, trackId: String, playlistId: Int) {
         viewModelScope.launch {
-            playlistInteractor.insertTrackAndPlaylist(track, trackList, playlistId)
+            playlistInteractor.insertTrackAndPlaylist(track, trackId, playlistId)
         }
     }
 
@@ -81,13 +82,13 @@ class PlayerViewModel(
     private fun processResult(foundPlaylist: List<Playlist>?) {
 
         renderState(
-            if (foundPlaylist.isNullOrEmpty()) PlaylistState.Empty
-            else PlaylistState.Content(playlists = foundPlaylist)
+            if (foundPlaylist.isNullOrEmpty()) ScreenState.Empty
+            else ScreenState.Content(foundPlaylist)
         )
 
     }
 
-    private fun renderState(state: PlaylistState) {
+    private fun renderState(state: ScreenState<out List<Playlist>>) {
         playlistStateListener.postValue(state)
     }
 

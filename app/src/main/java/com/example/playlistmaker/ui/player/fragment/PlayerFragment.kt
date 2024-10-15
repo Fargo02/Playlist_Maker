@@ -24,8 +24,8 @@ import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.ui.mapper.ArtworkMapper
 import com.example.playlistmaker.ui.player.ui.PlayerPlaylistAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
-import com.example.playlistmaker.ui.player.view_model.PlaylistState
 import com.example.playlistmaker.utils.BindingFragment
+import com.example.playlistmaker.utils.ScreenState
 import com.example.playlistmaker.utils.debounce
 import com.example.playlistmaker.utils.showSnackbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -209,10 +209,10 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
         viewModel.listener.onChange(playerState)
     }
 
-    private fun renderPlaylist(state: PlaylistState) {
+    private fun renderPlaylist(state: ScreenState<out List<Playlist>>) {
         when (state) {
-            is PlaylistState.Empty -> showEmpty()
-            is PlaylistState.Content -> showContent(state.playlists)
+            is ScreenState.Empty -> showEmpty()
+            is ScreenState.Content -> showContent(state.data)
         }
     }
 
