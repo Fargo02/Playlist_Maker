@@ -2,16 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/mark_160dp"
-    android:layout_height="@dimen/mark_196dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/mark_16dp"
-    android:layout_marginHorizontal="@dimen/mark_8dp">
+    android:layout_marginHorizontal="@dimen/mark_4dp">
 
     <ImageView
         android:id="@+id/cover"
-        android:layout_width="@dimen/mark_160dp"
-        android:layout_height="@dimen/mark_160dp"
-        tools:src="@drawable/playlist_placeholder"
+        android:layout_width="@dimen/mark_0dp"
+        android:layout_height="@dimen/mark_0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:srcCompat="@drawable/playlist_placeholder"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/name"/>
