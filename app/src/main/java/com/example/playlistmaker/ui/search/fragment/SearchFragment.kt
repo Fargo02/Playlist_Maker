@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,13 +17,11 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.ui.player.fragment.PlayerFragment
-import com.example.playlistmaker.ui.search.GetTrackListModel
-import com.example.playlistmaker.ui.search.view_model.HistoryState
-import com.example.playlistmaker.ui.search.view_model.SaveTracksState
 import com.example.playlistmaker.ui.search.view_model.SearchState
 import com.example.playlistmaker.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.ui.ui.TrackAdapter
 import com.example.playlistmaker.utils.BindingFragment
+import com.example.playlistmaker.utils.ScreenState
 import com.example.playlistmaker.utils.debounce
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -60,8 +57,7 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         }
 
         trackAdapter = TrackAdapter { track ->
-            val inputMethodManager =
-                requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
             onTrackClickDebounce(track)
         }
@@ -99,7 +95,7 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         }
 
         binding.inputEditText.setOnFocusChangeListener { _, _ ->
-            viewModel.getHistoryTracks( savedText)
+            viewModel.getHistoryTracks(savedText)
         }
 
         binding.clearIcon.setOnClickListener {
@@ -194,10 +190,10 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun historyRender(state: HistoryState) {
+    private fun historyRender(state: ScreenState<out List<Track>>) {
         when (state) {
-            is HistoryState.Content -> showContentHistory(state.tracks)
-            is HistoryState.Empty -> showEmptyHistory()
+            is ScreenState.Content -> showContentHistory(state.data)
+            is ScreenState.Empty -> showEmptyHistory()
         }
     }
 
@@ -214,8 +210,6 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
         binding.cleanHistory.isVisible = false
         binding.youSearch.isVisible = false
         binding.tracksList.isVisible = false
-        trackAdapter?.tracks?.clear()
-        trackAdapter?.notifyDataSetChanged()
     }
 
     companion object {

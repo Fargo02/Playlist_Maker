@@ -12,7 +12,7 @@ interface HistoryTrackDao {
     @Query("DELETE FROM history_track_name")
     suspend fun deleteAllTracks()
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(entity = HistoryTrackEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrack(track: HistoryTrackEntity)
 
     @Query("SELECT * FROM history_track_name ORDER BY currentTime DESC" )

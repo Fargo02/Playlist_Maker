@@ -17,7 +17,7 @@
         <activity
             android:name=".ui.root.activity.RootActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing"
+            android:windowSoftInputMode="adjustPan"
             tools:ignore="DiscouragedApi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

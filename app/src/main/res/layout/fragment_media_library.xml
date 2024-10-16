@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/toolbar"
-        android:layout_marginBottom="@dimen/clear_mark"
+        android:layout_marginBottom="@dimen/mark_0dp"
         android:title="@string/media">
     </Toolbar>
 
@@ -20,8 +20,8 @@
         style="@style/mediaTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/middle_mark"
-        android:layout_marginRight="@dimen/middle_mark"
+        android:layout_marginLeft="@dimen/mark_16dp"
+        android:layout_marginRight="@dimen/mark_16dp"
         app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
         app:tabRippleColor="@color/light_grey"/>
 

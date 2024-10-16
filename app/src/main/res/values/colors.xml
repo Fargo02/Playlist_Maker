@@ -13,4 +13,7 @@
     <color name="purple">#6200EE</color>
     <color name="blue_light">#9FBBF3</color>
     <color name="bgr_btn">#401A1B22</color>
+    <color name="custom_color_on_background">#1A1B22</color>
+    <color name="custom_color_on_text">#FFFFFFFF</color>
+    <color name="custom_color_on_divider">#E6E8EB</color>
 </resources>

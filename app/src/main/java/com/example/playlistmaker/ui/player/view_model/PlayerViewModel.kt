@@ -12,7 +12,10 @@ import com.example.playlistmaker.domain.player.PlayerState.DEFAULT
 import com.example.playlistmaker.domain.player.PlayerState.PAUSED
 import com.example.playlistmaker.domain.player.PlayerState.PLAYING
 import com.example.playlistmaker.domain.player.PlayerState.PREPARED
+import com.example.playlistmaker.domain.playlist.PlaylistInteractor
+import com.example.playlistmaker.domain.playlist.model.Playlist
 import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.utils.ScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -21,6 +24,7 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val favouritesInteractor: FavouritesInteractor,
+    private val playlistInteractor: PlaylistInteractor,
     url: String
 ): ViewModel() {
 
@@ -55,9 +59,38 @@ class PlayerViewModel(
     private val favouriteState = MutableLiveData<Boolean>()
     fun observeFavouriteState(): LiveData<Boolean> = favouriteState
 
-
     private val currentTimeListener = MutableLiveData<String>()
     fun observeCurrentTimeListener(): LiveData<String> = currentTimeListener
+
+    private val playlistStateListener = MutableLiveData<ScreenState<out List<Playlist>>>()
+    fun observePlaylistStateListener(): LiveData<ScreenState<out List<Playlist>>> = playlistStateListener
+
+
+    fun insertTrack(track: Track, trackId: String, playlistId: Int) {
+        viewModelScope.launch {
+            playlistInteractor.insertTrackAndPlaylist(track, trackId, playlistId)
+        }
+    }
+
+    fun getPlaylist() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists()
+                .collect { processResult(it) }
+        }
+    }
+
+    private fun processResult(foundPlaylist: List<Playlist>?) {
+
+        renderState(
+            if (foundPlaylist.isNullOrEmpty()) ScreenState.Empty
+            else ScreenState.Content(foundPlaylist)
+        )
+
+    }
+
+    private fun renderState(state: ScreenState<out List<Playlist>>) {
+        playlistStateListener.postValue(state)
+    }
 
     fun updateCurrentTime() {
         viewModelScope.launch(Dispatchers.Main) {
@@ -67,7 +100,6 @@ class PlayerViewModel(
                 delay(DELAY)
             }
         }
-
     }
 
     fun onFavoriteClicked(track: Track) {
@@ -81,6 +113,7 @@ class PlayerViewModel(
             }
         }
     }
+
     private fun renderState(isFavourite: Boolean) {
         favouriteState.postValue(isFavourite)
     }

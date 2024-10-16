@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="bgr_btn">#401A1B22</color>
+    <color name="custom_color_on_background">#FFFFFFFF</color>
+    <color name="custom_color_on_text">#1A1B22</color>
+    <color name="custom_color_on_divider">#FFFFFFFF</color>
 </resources>

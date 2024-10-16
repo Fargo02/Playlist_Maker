@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavouritesBinding
 import com.example.playlistmaker.domain.search.model.Track
-import com.example.playlistmaker.ui.library.view_model.FavouriteState
 import com.example.playlistmaker.ui.library.view_model.FavouriteTracksViewModel
 import com.example.playlistmaker.ui.player.fragment.PlayerFragment
 import com.example.playlistmaker.ui.ui.TrackAdapter
 import com.example.playlistmaker.utils.BindingFragment
+import com.example.playlistmaker.utils.ScreenState
 import com.example.playlistmaker.utils.debounce
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -63,10 +63,10 @@ class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
         trackAdapter = null
     }
 
-    private fun render(state: FavouriteState) {
+    private fun render(state: ScreenState<out List<Track>>) {
         when (state) {
-            is FavouriteState.Empty -> showEmpty()
-            is FavouriteState.Content -> showContent(state.tracks)
+            is ScreenState.Empty -> showEmpty()
+            is ScreenState.Content -> showContent(state.data)
         }
     }
     private fun showContent(tracks: List<Track>){
@@ -79,6 +79,8 @@ class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
     private fun showEmpty() {
         binding.placeholderGroup.isVisible = true
         binding.tracksList.isVisible = false
+        trackAdapter?.tracks?.clear()
+        trackAdapter?.notifyDataSetChanged()
     }
 
     companion object {

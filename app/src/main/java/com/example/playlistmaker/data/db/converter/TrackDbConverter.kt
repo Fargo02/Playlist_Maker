@@ -1,14 +1,13 @@
 package com.example.playlistmaker.data.db.converter
 
-import com.example.playlistmaker.data.db.entity.HistoryTrackEntity
-import com.example.playlistmaker.data.db.entity.TrackEntity
+import com.example.playlistmaker.data.db.entity.TrackFavouriteEntity
 import com.example.playlistmaker.domain.search.model.Track
 import java.time.LocalDateTime
 
 class TrackDbConverter {
 
-    fun map(track: Track): TrackEntity {
-        return TrackEntity(
+    fun map(track: Track): TrackFavouriteEntity {
+        return TrackFavouriteEntity(
             trackId = track.trackId,
             trackName = track.trackName,
             artistName = track.artistName,
@@ -24,7 +23,7 @@ class TrackDbConverter {
         )
     }
 
-    fun map(track: TrackEntity): Track {
+    fun map(track: TrackFavouriteEntity): Track {
         return Track(
             trackName = track.trackName,
             artistName = track.artistName,
