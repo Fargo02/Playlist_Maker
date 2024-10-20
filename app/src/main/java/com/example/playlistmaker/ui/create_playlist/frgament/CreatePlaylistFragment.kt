@@ -5,16 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.content.res.AppCompatResources.getColorStateList
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
@@ -27,18 +23,22 @@ import com.example.playlistmaker.domain.playlist.model.Playlist
 import com.example.playlistmaker.ui.create_playlist.view_model.CreatePlaylistViewModel
 import com.example.playlistmaker.utils.BindingFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.playlistmaker.utils.showSnackbar
+import org.koin.core.parameter.parametersOf
 
-class FragmentCreatePlaylist(): BindingFragment<FragmentCreatePlaylistBinding>() {
+open class CreatePlaylistFragment(): BindingFragment<FragmentCreatePlaylistBinding>() {
 
-    private var namePlaylist = ""
-    private var descriptionPlaylist = ""
-    private var coverPlaylist = ""
+    open var namePlaylist = ""
+    open var descriptionPlaylist = ""
+    open var coverPlaylist = ""
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
-    private val viewModel: CreatePlaylistViewModel by viewModel()
+    open lateinit var nameTextWatcher: TextWatcher
+
+    open val viewModel: CreatePlaylistViewModel by viewModel {
+        parametersOf(-1L)
+    }
 
     override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentCreatePlaylistBinding {
         return FragmentCreatePlaylistBinding.inflate(inflater, container, false)
@@ -72,7 +72,8 @@ class FragmentCreatePlaylist(): BindingFragment<FragmentCreatePlaylistBinding>()
                     Glide.with(binding.cover)
                         .load(uri)
                         .transform(
-                            CenterCrop(), RoundedCorners(8)
+                            CenterCrop(),
+                            RoundedCorners(resources.getDimensionPixelSize(R.dimen.mark_8dp))
                         )
                         .into(binding.imageCover)
                 } else {
@@ -86,7 +87,7 @@ class FragmentCreatePlaylist(): BindingFragment<FragmentCreatePlaylistBinding>()
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        val nameTextWatcher = object : TextWatcher {
+        nameTextWatcher = object : TextWatcher {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
@@ -116,28 +117,33 @@ class FragmentCreatePlaylist(): BindingFragment<FragmentCreatePlaylistBinding>()
         }
         descriptionTextWatcher.let { binding.inputEditTextDescription.addTextChangedListener(it) }
 
+
         binding.bottomCreate.setOnClickListener {
-            viewModel.addPlaylist(Playlist(
+            createPlaylist()
+        }
+
+        showConfirmDialog()
+    }
+    open fun createPlaylist() {
+        viewModel.addPlaylist(
+            Playlist(
                 id = 0,
                 name = namePlaylist,
                 description = descriptionPlaylist,
                 imageUri = coverPlaylist,
-            ))
-            showSnackbar(requireView(), requireContext(), namePlaylist, R.string.playlist_created)
+        ))
+        showSnackbar(requireView(), requireContext(), namePlaylist, R.string.playlist_created)
 
-            findNavController().popBackStack()
-        }
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            confirmDialog.show()
-        }
+        findNavController().popBackStack()
     }
 
-    private fun showConfirmDialog() {
-        if (namePlaylist != "" || descriptionPlaylist != "" || coverPlaylist != "") {
-            confirmDialog.show()
-        } else {
-            findNavController().popBackStack()
+    open fun showConfirmDialog() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (namePlaylist != "" || descriptionPlaylist != "" || coverPlaylist != "") {
+                confirmDialog.show()
+            } else {
+                findNavController().popBackStack()
+            }
         }
     }
 }

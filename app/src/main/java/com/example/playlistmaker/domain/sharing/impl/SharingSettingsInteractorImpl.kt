@@ -1,14 +1,14 @@
 package com.example.playlistmaker.domain.sharing.impl
 
 import com.example.playlistmaker.domain.sharing.model.EmailData
-import com.example.playlistmaker.domain.sharing.settings.SharingSettingsInteractor
+import com.example.playlistmaker.domain.sharing.settings.SharingInteractor
 import com.example.playlistmaker.domain.sharing.settings.ExternalNavigator
 
 class SharingSettingsInteractorImpl(
     private val externalNavigator: ExternalNavigator
-): SharingSettingsInteractor {
-    override fun shareApp(link : String) {
-        externalNavigator.shareLink(link)
+): SharingInteractor {
+    override fun share(message : String) {
+        externalNavigator.share(message)
     }
 
     override fun openTerms(link : String) {

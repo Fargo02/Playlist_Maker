@@ -22,6 +22,7 @@
         style="@style/textColor"
         android:layout_width="@dimen/mark_0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mark_4dp"
         tools:text="Best soooooongs 2024"
         android:ellipsize="end"
         android:maxLines="1"

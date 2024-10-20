@@ -22,7 +22,10 @@ class PlaylistViewHolder(
         }
         Glide.with(itemView)
             .load(model.imageUri)
-            .transform(CenterCrop(), RoundedCorners(8))
+            .transform(
+                CenterCrop(),
+                RoundedCorners(itemView.context.resources.getDimensionPixelSize(R.dimen.mark_8dp))
+            )
             .placeholder(R.drawable.playlist_placeholder)
             .into(binding.cover)
 

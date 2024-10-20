@@ -126,9 +126,15 @@
     </style>
 
     <style name="dialogView" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="materialAlertDialogTitleTextStyle">@style/titleStyle</item>
         <item name="colorSurface">@color/white</item>
         <item name="buttonBarPositiveButtonStyle">@style/buttonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/buttonStyle</item>
+    </style>
+
+    <style name="titleStyle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/dark</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
     <style name="buttonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
