@@ -88,6 +88,7 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
 
         viewModel.observePlaylistListener().observe(viewLifecycleOwner) {
 
+
             currentPlaylist = it
 
             Glide.with(binding.cover)
@@ -96,8 +97,12 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
                 .placeholder(R.drawable.big_placeholder)
                 .into(binding.cover)
 
-            if (it.description != "") binding.description.text = it.description
-            else binding.description.isVisible = false
+            if (it.description != "") {
+                binding.description.isVisible = true
+                binding.description.text = it.description
+            } else {
+                binding.description.isVisible = false
+            }
 
             binding.name.text = it.name
             binding.countTrack.text = it.count
@@ -185,6 +190,7 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
         }
     }
 
+
     private fun initializePlaylistsBottomSheet() {
         val bottomSheet = binding.playlistsBottomSheet
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
@@ -246,12 +252,15 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
 
     private fun showContent(tracks: List<Track>) {
         binding.tracksList.isVisible = true
+        binding.placeholderGroup.isVisible = false
         trackAdapter?.tracks?.clear()
         trackAdapter?.tracks?.addAll(tracks)
         trackAdapter?.notifyDataSetChanged()
     }
 
     private fun showEmpty() {
+        binding.placeholderGroup.isVisible = true
+        binding.tracksList.isVisible = false
         trackAdapter?.tracks?.clear()
         trackAdapter?.notifyDataSetChanged()
     }

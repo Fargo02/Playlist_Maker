@@ -31,12 +31,8 @@ class PlaylistViewModel(
     private val tracksStateListener = MutableLiveData<ScreenState<out List<Track>>>()
     fun observeTracksStateListener(): LiveData<ScreenState<out List<Track>>> = tracksStateListener
 
-    init {
-        getPlaylistInf()
-    }
-
     fun getPlaylistInf() {
-        viewModelScope.launch {
+        val job = viewModelScope.launch {
             var durationInMills = 0L
             currentPlaylist = playlistInteractor.getPlaylist(playlistId)
             val trackList = if (currentPlaylist.trackList != "") {
@@ -51,8 +47,9 @@ class PlaylistViewModel(
 
             playlistListener.postValue(converter.map(currentPlaylist, durationInMills))
 
-            processResult(trackList)
+            processResult(trackList.reversed())
         }
+
     }
 
     fun deleteTrack(idTrack: Long, idPlaylist: Long) {

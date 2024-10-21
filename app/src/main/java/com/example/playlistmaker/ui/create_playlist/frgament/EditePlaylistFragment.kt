@@ -53,6 +53,10 @@ class EditePlaylistFragment(): CreatePlaylistFragment() {
             }
         }
 
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
         binding.toolbar.title = getString(R.string.edite)
         binding.bottomCreate.text = getString(R.string.save)
         binding.bottomCreate.setOnClickListener {
