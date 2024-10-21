@@ -45,7 +45,16 @@ class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
                 PlayerFragment.createArgs(json))
         }
 
-        trackAdapter = TrackAdapter { track -> onTrackClickDebounce(track) }
+        trackAdapter = TrackAdapter(object : TrackAdapter.TrackClickListener{
+            override fun onTrackClick(track: Track) {
+                onTrackClickDebounce(track)
+            }
+
+            override fun onLongClickListener(track: Track) {
+                TODO("Not yet implemented")
+            }
+
+        })
 
         trackAdapter?.tracks = tracks
         binding.tracksList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)

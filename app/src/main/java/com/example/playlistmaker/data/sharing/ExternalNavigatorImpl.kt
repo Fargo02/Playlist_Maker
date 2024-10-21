@@ -12,10 +12,14 @@ import androidx.core.content.ContextCompat.startActivity
 import com.example.playlistmaker.domain.sharing.model.EmailData
 import com.example.playlistmaker.domain.sharing.settings.ExternalNavigator
 
-class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
-    override fun shareLink(link: String) {
+class ExternalNavigatorImpl(
+    private val context: Context
+) : ExternalNavigator {
+
+    override fun share(message: String) {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, message)
         }
         val chooserIntent = createChooser(shareIntent, "Поделиться").apply {
             addFlags(FLAG_ACTIVITY_NEW_TASK)

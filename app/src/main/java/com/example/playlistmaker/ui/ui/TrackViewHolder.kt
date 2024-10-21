@@ -10,7 +10,7 @@ import com.example.playlistmaker.domain.search.model.Track
 
 class TrackViewHolder(
     private val binding: TrackItemBinding,
-    private val clickListener: TrackAdapter.TrackClickListener
+    private val clickListener: TrackAdapter.TrackClickListener,
 ): RecyclerView.ViewHolder(binding.root) {
 
     fun bind(model: Track) {
@@ -20,10 +20,17 @@ class TrackViewHolder(
 
         Glide.with(binding.itemTrackCover)
             .load(model.artworkUrl100)
-            .transform(CenterCrop(), RoundedCorners(2))
+            .transform(
+                CenterCrop(),
+                RoundedCorners(itemView.context.resources.getDimensionPixelSize(R.dimen.mark_2dp))
+            )
             .placeholder(R.drawable.track_placeholder)
             .into(binding.itemTrackCover)
 
-        itemView.setOnClickListener { clickListener.onTrackClick(track = model) }
+        itemView.setOnClickListener { clickListener.onTrackClick(model) }
+        itemView.setOnLongClickListener {
+            clickListener.onLongClickListener(track = model)
+            return@setOnLongClickListener true
+        }
     }
 }

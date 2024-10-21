@@ -66,7 +66,7 @@ class PlayerViewModel(
     fun observePlaylistStateListener(): LiveData<ScreenState<out List<Playlist>>> = playlistStateListener
 
 
-    fun insertTrack(track: Track, trackId: String, playlistId: Int) {
+    fun insertTrack(track: Track, trackId: String, playlistId: Long) {
         viewModelScope.launch {
             playlistInteractor.insertTrackAndPlaylist(track, trackId, playlistId)
         }

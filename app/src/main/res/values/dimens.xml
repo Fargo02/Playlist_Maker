@@ -11,6 +11,8 @@
     <dimen name="text_mark_32sp">32sp</dimen>
 
     <dimen name="mark_0dp">0dp</dimen>
+    <dimen name="mark_1dp">1dp</dimen>
+    <dimen name="mark_2dp">2dp</dimen>
     <dimen name="mark_4dp">4dp</dimen>
     <dimen name="mark_6dp">6dp</dimen>
     <dimen name="mark_8dp">8dp</dimen>
@@ -36,6 +38,7 @@
     <dimen name="mark_54dp">54dp</dimen>
     <dimen name="mark_56dp">56dp</dimen>
     <dimen name="mark_102dp">102dp</dimen>
+    <dimen name="mark_110dp">110dp</dimen>
     <dimen name="mark_124dp">124dp</dimen>
     <dimen name="mark_160dp">160dp</dimen>
     <dimen name="mark_196dp">196dp</dimen>

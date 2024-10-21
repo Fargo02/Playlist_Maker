@@ -11,7 +11,7 @@ import com.example.playlistmaker.domain.history.impl.HistoryTrackInteractorImpl
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.playlist.impl.PlaylistInteractorImpl
 import com.example.playlistmaker.domain.sharing.impl.SharingSettingsInteractorImpl
-import com.example.playlistmaker.domain.sharing.settings.SharingSettingsInteractor
+import com.example.playlistmaker.domain.sharing.settings.SharingInteractor
 import org.koin.dsl.module
 
 val interactorModule = module {
@@ -28,7 +28,7 @@ val interactorModule = module {
         HistoryTrackInteractorImpl(get())
     }
 
-    single<SharingSettingsInteractor> {
+    single<SharingInteractor> {
         SharingSettingsInteractorImpl(get())
     }
 

@@ -56,11 +56,18 @@ class SearchFragment(): BindingFragment<FragmentSearchBinding>() {
             onDestroy()
         }
 
-        trackAdapter = TrackAdapter { track ->
-            val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
-            onTrackClickDebounce(track)
-        }
+        trackAdapter = TrackAdapter(object : TrackAdapter.TrackClickListener{
+            override fun onTrackClick(track: Track) {
+                val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+                inputMethodManager?.hideSoftInputFromWindow(binding.inputEditText.windowToken, 0)
+                onTrackClickDebounce(track)
+            }
+
+            override fun onLongClickListener(track: Track) {
+                TODO("Not yet implemented")
+            }
+
+        })
 
         trackAdapter?.tracks = tracks
         binding.tracksList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)

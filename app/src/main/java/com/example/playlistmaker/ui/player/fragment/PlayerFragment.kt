@@ -111,7 +111,8 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
         Glide.with(binding.cover)
             .load(ArtworkMapper.getCoverArtwork(currentTrack.artworkUrl100))
             .transform(
-                CenterCrop(), RoundedCorners(8)
+                CenterCrop(),
+                RoundedCorners(resources.getDimensionPixelSize(R.dimen.mark_8dp))
             )
             .placeholder(R.drawable.big_placeholder)
             .into(binding.cover)

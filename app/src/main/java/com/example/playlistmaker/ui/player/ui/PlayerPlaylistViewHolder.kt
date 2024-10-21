@@ -23,7 +23,8 @@ class PlayerPlaylistViewHolder(
         Glide.with(binding.cover)
             .load(model.imageUri)
             .transform(
-                CenterCrop(), RoundedCorners(2)
+                CenterCrop(),
+                RoundedCorners(itemView.context.resources.getDimensionPixelSize(R.dimen.mark_2dp))
             )
             .placeholder(R.drawable.track_placeholder)
             .into(binding.cover)
