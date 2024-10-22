@@ -9,7 +9,7 @@ import com.example.playlistmaker.domain.playlist.model.Playlist
 import com.example.playlistmaker.utils.ScreenState
 import kotlinx.coroutines.launch
 
-class PlaylistsViewModel(
+class PlaylistListViewModel(
     private val playlistInteractor: PlaylistInteractor
 ): ViewModel() {
 

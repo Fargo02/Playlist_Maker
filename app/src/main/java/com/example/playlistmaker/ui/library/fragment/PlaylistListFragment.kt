@@ -8,24 +8,26 @@ import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.example.playlistmaker.databinding.FragmentPlaylistListBinding
 import com.example.playlistmaker.domain.playlist.model.Playlist
 import com.example.playlistmaker.ui.library.ui.PlaylistAdapter
-import com.example.playlistmaker.ui.library.view_model.PlaylistsViewModel
+import com.example.playlistmaker.ui.library.view_model.PlaylistListViewModel
+import com.example.playlistmaker.ui.player.fragment.PlayerFragment
+import com.example.playlistmaker.ui.playlist.fragment.PlaylistFragment
 import com.example.playlistmaker.utils.BindingFragment
 import com.example.playlistmaker.utils.ScreenState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistsFragment(): BindingFragment<FragmentPlaylistsBinding>() {
+class PlaylistListFragment(): BindingFragment<FragmentPlaylistListBinding>() {
 
-    private val viewModel: PlaylistsViewModel by viewModel()
+    private val viewModel: PlaylistListViewModel by viewModel()
 
     private var playlists = ArrayList<Playlist>()
 
     private var playlistAdapter: PlaylistAdapter? = null
 
-    override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentPlaylistsBinding {
-        return FragmentPlaylistsBinding.inflate(inflater, container, false)
+    override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentPlaylistListBinding {
+        return FragmentPlaylistListBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,7 +36,8 @@ class PlaylistsFragment(): BindingFragment<FragmentPlaylistsBinding>() {
         viewModel.fillData()
 
         playlistAdapter = PlaylistAdapter { playlist ->
-
+            findNavController().navigate(R.id.action_mediaLibraryFragment_to_playlistFragment,
+                PlaylistFragment.createArgs(playlist.id))
         }
 
         viewModel.observerStateLiveData().observe(viewLifecycleOwner) {
@@ -74,8 +77,13 @@ class PlaylistsFragment(): BindingFragment<FragmentPlaylistsBinding>() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        playlistAdapter = null
+    }
+
     companion object {
-        fun newInstance() = PlaylistsFragment()
+        fun newInstance() = PlaylistListFragment()
     }
 
 }

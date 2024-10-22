@@ -5,12 +5,12 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.sharing.model.EmailData
-import com.example.playlistmaker.domain.sharing.settings.SharingSettingsInteractor
+import com.example.playlistmaker.domain.sharing.settings.SharingInteractor
 import com.example.playlistmaker.utils.Application
 import com.example.playlistmaker.utils.KEY_NIGHT_MODE
 
 class SettingsViewModel(
-    private val sharingSettingsInteractor: SharingSettingsInteractor,
+    private val sharingSettingsInteractor: SharingInteractor,
     private val context: Context
 ): ViewModel() {
 
@@ -32,7 +32,7 @@ class SettingsViewModel(
     }
 
     fun getShareTheApp(link: String) {
-        sharingSettingsInteractor.shareApp(link)
+        sharingSettingsInteractor.share(link)
     }
 
     fun getWriteToSupport(email: EmailData) {

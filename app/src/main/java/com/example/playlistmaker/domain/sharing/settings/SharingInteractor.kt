@@ -2,9 +2,9 @@ package com.example.playlistmaker.domain.sharing.settings
 
 import com.example.playlistmaker.domain.sharing.model.EmailData
 
-interface SharingSettingsInteractor {
+interface SharingInteractor {
 
-    fun shareApp(link : String)
+    fun share(message : String)
 
     fun openTerms(link : String)
 
