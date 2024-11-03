@@ -41,9 +41,22 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
+        }
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
 }
 
 dependencies {
+    //MockK
+    androidTestImplementation ("io.mockk:mockk-android:1.12.3")
+    testImplementation ("io.mockk:mockk:1.12.3")
 
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
