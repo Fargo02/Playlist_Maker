@@ -37,6 +37,7 @@
     <dimen name="mark_50dp">50dp</dimen>
     <dimen name="mark_54dp">54dp</dimen>
     <dimen name="mark_56dp">56dp</dimen>
+    <dimen name="mark_80dp">80dp</dimen>
     <dimen name="mark_102dp">102dp</dimen>
     <dimen name="mark_110dp">110dp</dimen>
     <dimen name="mark_124dp">124dp</dimen>

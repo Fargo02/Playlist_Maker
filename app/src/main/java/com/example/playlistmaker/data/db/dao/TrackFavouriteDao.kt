@@ -22,4 +22,7 @@ interface TrackFavouriteDao {
 
     @Query("SELECT trackId FROM track_favourite_name")
     suspend fun getIdTracks(): List<Long>
+
+    @Query("SELECT * FROM track_favourite_name WHERE trackId = :trackId")
+    suspend fun getTrackById(trackId: Long): TrackFavouriteEntity?
 }

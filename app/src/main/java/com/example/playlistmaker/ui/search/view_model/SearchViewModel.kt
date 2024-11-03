@@ -14,12 +14,8 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val historyTrackInteractor : HistoryTrackInteractor,
-    private val searchInteractor: TracksInteractor
+    private val searchInteractor: TracksInteractor,
 ): ViewModel() {
-
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
 
     private var latestSearchText: String? = null
 
@@ -50,7 +46,6 @@ class SearchViewModel(
             renderHistoryState(ScreenState.Empty)
         }
     }
-
 
     fun updateTrack(track: Track) {
         viewModelScope.launch {
@@ -129,5 +124,9 @@ class SearchViewModel(
 
     private fun renderState(state: SearchState) {
         stateLiveData.postValue(state)
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

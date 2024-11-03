@@ -42,7 +42,7 @@
         <item name="tint">@color/grey</item>
     </style>
 
-    <style name="toolbar">
+    <style name="toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:textColor">@color/dark</item>
         <item name="android:layout_marginBottom">@dimen/mark_24dp</item>
         <item name="android:contentInsetStartWithNavigation">@dimen/mark_0dp</item>
@@ -126,20 +126,26 @@
     </style>
 
     <style name="dialogView" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="materialAlertDialogTitleTextStyle">@style/titleStyle</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/dialogTitleStyle</item>
         <item name="colorSurface">@color/white</item>
-        <item name="buttonBarPositiveButtonStyle">@style/buttonStyle</item>
-        <item name="buttonBarNegativeButtonStyle">@style/buttonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/dialogButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/dialogButtonStyle</item>
     </style>
 
-    <style name="titleStyle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
+    <style name="dialogTitleStyle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
         <item name="android:textColor">@color/dark</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
-    <style name="buttonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+    <style name="dialogButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/blue</item>
         <item name="rippleColor">@color/grey</item>
     </style>
 
+    <style name="buttonStyle" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/black</item>
+        <item name="android:insetTop">@dimen/mark_0dp</item>
+        <item name="android:insetBottom">@dimen/mark_0dp</item>
+        <item name="android:textSize">@dimen/text_mark_14sp</item>
+    </style>
 </resources>    

@@ -12,19 +12,14 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:constraint_referenced_tags="imagePlaceholder,textPlaceholder"/>
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/createNewPlaylist"
         app:layout_constraintTag="createNewPlaylist"
+        style="@style/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/mark_36dp"
         android:layout_marginTop="@dimen/mark_24dp"
-        android:backgroundTint="@color/black"
-        app:cornerRadius="@dimen/mark_54dp"
-        android:insetTop="@dimen/mark_0dp"
-        android:insetBottom="@dimen/mark_0dp"
         android:text="@string/new_playlist"
-        android:textSize="@dimen/text_mark_14sp"
-        android:textAllCaps="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,7 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imagePlaceholder"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playlists"
         android:layout_width="@dimen/mark_0dp"

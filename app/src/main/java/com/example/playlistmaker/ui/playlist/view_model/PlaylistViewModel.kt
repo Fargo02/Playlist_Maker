@@ -10,7 +10,6 @@ import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.domain.sharing.settings.SharingInteractor
 import com.example.playlistmaker.ui.converter.PlaylistConverter
 import com.example.playlistmaker.ui.mapper.splitStringToLongMapper
-import com.example.playlistmaker.ui.mapper.timeMapper
 import com.example.playlistmaker.ui.playlist.model.CurrentPlaylist
 import com.example.playlistmaker.utils.ScreenState
 import kotlinx.coroutines.launch
@@ -32,13 +31,13 @@ class PlaylistViewModel(
     fun observeTracksStateListener(): LiveData<ScreenState<out List<Track>>> = tracksStateListener
 
     fun getPlaylistInf() {
-        val job = viewModelScope.launch {
+        viewModelScope.launch {
             var durationInMills = 0L
             currentPlaylist = playlistInteractor.getPlaylist(playlistId)
             val trackList = if (currentPlaylist.trackList != "") {
                 splitStringToLongMapper(currentPlaylist.trackList).map { id ->
                     val track = playlistInteractor.getTrack(id)
-                    durationInMills += timeMapper(track.trackTimeMillis)
+                    durationInMills += track.trackTimeMillis.toLong()
                     track
                 }
             } else {

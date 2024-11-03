@@ -25,7 +25,7 @@ class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val favouritesInteractor: FavouritesInteractor,
     private val playlistInteractor: PlaylistInteractor,
-    url: String
+    track: Track
 ): ViewModel() {
 
     private var timerJob: Job? = null
@@ -50,8 +50,13 @@ class PlayerViewModel(
     }
 
     init {
-        playerInteractor.prepare(url, listener)
+        playerInteractor.prepare(track.previewUrl!!, listener)
+        checkIsFavouriteTrack(track.trackId)
+
     }
+
+    private val stateLiveDataFavourite = MutableLiveData<Boolean>()
+    fun observeStateFavourite(): LiveData<Boolean> = stateLiveDataFavourite
 
     private val playerStateListener = MutableLiveData<PlayerState>()
     fun observePlayerStateListener(): LiveData<PlayerState> = playerStateListener
@@ -69,6 +74,14 @@ class PlayerViewModel(
     fun insertTrack(track: Track, trackId: String, playlistId: Long) {
         viewModelScope.launch {
             playlistInteractor.insertTrackAndPlaylist(track, trackId, playlistId)
+        }
+    }
+
+    private fun checkIsFavouriteTrack(trackId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favouritesInteractor.getFavouriteTrackById(trackId).collect {
+                stateLiveDataFavourite.postValue(it)
+            }
         }
     }
 

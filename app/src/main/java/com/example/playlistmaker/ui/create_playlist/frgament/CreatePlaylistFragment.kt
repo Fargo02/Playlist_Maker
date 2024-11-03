@@ -29,12 +29,12 @@ import org.koin.core.parameter.parametersOf
 
 open class CreatePlaylistFragment(): BindingFragment<FragmentCreatePlaylistBinding>() {
 
-    open var namePlaylist = ""
-    open var descriptionPlaylist = ""
-    open var coverPlaylist = ""
+    protected open var namePlaylist = ""
+    protected open var descriptionPlaylist = ""
+    protected open var coverPlaylist = ""
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
-    open lateinit var nameTextWatcher: TextWatcher
+    protected open lateinit var nameTextWatcher: TextWatcher
 
     open val viewModel: CreatePlaylistViewModel by viewModel {
         parametersOf(-1L)
@@ -46,7 +46,6 @@ open class CreatePlaylistFragment(): BindingFragment<FragmentCreatePlaylistBindi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         confirmDialog  = MaterialAlertDialogBuilder(requireContext(), R.style.dialogView)
             .setTitle(R.string.close_create_playlist)
@@ -61,7 +60,11 @@ open class CreatePlaylistFragment(): BindingFragment<FragmentCreatePlaylistBindi
         binding.bottomCreate.isEnabled = false
 
         binding.toolbar.setNavigationOnClickListener {
-            showConfirmDialog()
+            if (namePlaylist != "" || descriptionPlaylist != "" || coverPlaylist != "") {
+                confirmDialog.show()
+            } else {
+                findNavController().popBackStack()
+            }
         }
 
         val pickMedia =
@@ -116,7 +119,6 @@ open class CreatePlaylistFragment(): BindingFragment<FragmentCreatePlaylistBindi
             override fun afterTextChanged(s: Editable?) { }
         }
         descriptionTextWatcher.let { binding.inputEditTextDescription.addTextChangedListener(it) }
-
 
         binding.bottomCreate.setOnClickListener {
             createPlaylist()

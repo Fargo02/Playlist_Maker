@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.core.view.marginBottom
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,24 +31,17 @@ import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-
 class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
 
     private lateinit var currentPlaylist : CurrentPlaylist
-
-    private var playlistId: Long = 0
-
-    private var tracks = ArrayList<Track>()
-
+    private lateinit var confirmDialog: MaterialAlertDialogBuilder
     private lateinit var onTrackClickDebounce: (Track) -> Unit
-
+    private var playlistId: Long = 0
+    private var tracks = ArrayList<Track>()
     private var trackAdapter: TrackAdapter? = null
-
     private val viewModel: PlaylistViewModel by viewModel {
         parametersOf(playlistId)
     }
-
-    private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
     override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentPlaylistBinding {
         return FragmentPlaylistBinding.inflate(layoutInflater,container, false)
@@ -75,11 +67,9 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
             override fun onTrackClick(track: Track) {
                 onTrackClickDebounce(track)
             }
-
             override fun onLongClickListener(track: Track) {
                 showDialogDeleteTrack(track.trackId, currentPlaylist.id)
             }
-
         })
 
         trackAdapter?.tracks = tracks
@@ -87,9 +77,10 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
         binding.tracksList.adapter = trackAdapter
 
         viewModel.observePlaylistListener().observe(viewLifecycleOwner) {
-
-
             currentPlaylist = it
+            binding.name.text = it.name
+            binding.countTrack.text = it.count
+            binding.duration.text = it.duration
 
             Glide.with(binding.cover)
                 .load(it.imageUri)
@@ -103,11 +94,6 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
             } else {
                 binding.description.isVisible = false
             }
-
-            binding.name.text = it.name
-            binding.countTrack.text = it.count
-            binding.duration.text = it.duration
-
         }
 
         viewModel.observeTracksStateListener().observe(viewLifecycleOwner) {
@@ -117,7 +103,6 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
         binding.buttonBack.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-
 
         initializePlaylistsBottomSheet()
 
@@ -134,20 +119,13 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
         bottomSheetBehaviorMore.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-
                 when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        overlay.isVisible = false
-                    }
-                    else -> {
-                        overlay.isVisible = true
-                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> overlay.isVisible = false
+                    else -> overlay.isVisible = true
                 }
             }
-
             override fun onSlide(bottomSheet: View, slideOffset: Float) { overlay.alpha = slideOffset }
         })
-
 
         binding.moreButton.setOnClickListener {
             bottomSheetBehaviorMore.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -194,7 +172,6 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
     private fun initializePlaylistsBottomSheet() {
         val bottomSheet = binding.playlistsBottomSheet
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-
         binding.root.post {
             bottomSheetBehavior.peekHeight = getBottomDistance(binding.shareButton)
         }
@@ -248,7 +225,6 @@ class PlaylistFragment : BindingFragment<FragmentPlaylistBinding>() {
         messageBuilder.append(formattedTrackList)
         return messageBuilder.toString()
     }
-
 
     private fun showContent(tracks: List<Track>) {
         binding.tracksList.isVisible = true

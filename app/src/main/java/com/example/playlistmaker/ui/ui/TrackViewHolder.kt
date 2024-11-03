@@ -7,16 +7,17 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackItemBinding
 import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.ui.mapper.TimeMapper
 
 class TrackViewHolder(
     private val binding: TrackItemBinding,
     private val clickListener: TrackAdapter.TrackClickListener,
+    private val trackTimeMapper: TimeMapper = TimeMapper()
 ): RecyclerView.ViewHolder(binding.root) {
-
     fun bind(model: Track) {
         binding.itemTrackName.text = model.trackName
         binding.itemArtistName.text = model.artistName
-        binding.itemTrackTime.text = model.trackTimeMillis
+        binding.itemTrackTime.text = trackTimeMapper.getString(model.trackTimeMillis)
 
         Glide.with(binding.itemTrackCover)
             .load(model.artworkUrl100)

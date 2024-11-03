@@ -23,15 +23,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
 
     private var tracks = ArrayList<Track>()
-
     private var trackAdapter: TrackAdapter? = null
-
     private val viewModel: FavouriteTracksViewModel by viewModel()
 
     override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentFavouritesBinding {
         return FragmentFavouritesBinding.inflate(inflater, container, false)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,22 +46,16 @@ class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
             override fun onTrackClick(track: Track) {
                 onTrackClickDebounce(track)
             }
-
-            override fun onLongClickListener(track: Track) {
-                TODO("Not yet implemented")
-            }
-
+            override fun onLongClickListener(track: Track) { }
         })
 
         trackAdapter?.tracks = tracks
         binding.tracksList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.tracksList.adapter = trackAdapter
 
-
         viewModel.observeFavouriteState().observe(viewLifecycleOwner) {
             render(it)
         }
-
     }
 
     override fun onDestroyView() {
@@ -93,10 +84,8 @@ class FavouriteTracksFragment(): BindingFragment<FragmentFavouritesBinding>() {
     }
 
     companion object {
-
         fun newInstance() = FavouriteTracksFragment()
         private const val CLICK_DEBOUNCE_DELAY = 300L
-
     }
 
 }

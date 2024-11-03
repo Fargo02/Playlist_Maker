@@ -80,13 +80,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mark_32dp"
             android:hint="@string/name"
+            android:textColorHint="@color/grey"
             app:layout_constraintTop_toBottomOf="@id/cover"
             app:layout_constraintStart_toStartOf="@id/start_guideline_16dp"
             app:layout_constraintEnd_toStartOf="@id/end_guideline_16dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputEditTextName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -96,6 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mark_16dp"
             android:hint="@string/description"
+            android:textColorHint="@color/grey"
             android:textCursorDrawable="@drawable/cursor"
             app:layout_constraintVertical_chainStyle="spread_inside"
             app:layout_constraintTop_toBottomOf="@id/inputEditTextNameLayout"
@@ -105,7 +109,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputEditTextDescription"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

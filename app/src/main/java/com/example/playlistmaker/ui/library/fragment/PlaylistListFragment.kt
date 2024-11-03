@@ -21,9 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PlaylistListFragment(): BindingFragment<FragmentPlaylistListBinding>() {
 
     private val viewModel: PlaylistListViewModel by viewModel()
-
     private var playlists = ArrayList<Playlist>()
-
     private var playlistAdapter: PlaylistAdapter? = null
 
     override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentPlaylistListBinding {

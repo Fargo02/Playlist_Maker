@@ -22,6 +22,7 @@ import com.example.playlistmaker.domain.player.PlayerState.PREPARED
 import com.example.playlistmaker.domain.playlist.model.Playlist
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.ui.mapper.ArtworkMapper
+import com.example.playlistmaker.ui.mapper.TimeMapper
 import com.example.playlistmaker.ui.player.ui.PlayerPlaylistAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.utils.BindingFragment
@@ -29,6 +30,8 @@ import com.example.playlistmaker.utils.ScreenState
 import com.example.playlistmaker.utils.debounce
 import com.example.playlistmaker.utils.showSnackbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -36,19 +39,16 @@ import org.koin.core.parameter.parametersOf
 
 class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
 
+    private lateinit var onPlaylistClickDebounce: (Playlist) -> Unit
     private lateinit var currentTrack: Track
-
-    private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(currentTrack.previewUrl)
-    }
-
     private lateinit var playerState: PlayerState
-
+    private val trackTimeMapper: TimeMapper = TimeMapper()
+    private var playlistAdapter: PlayerPlaylistAdapter? = null
     private var playlists = ArrayList<Playlist>()
 
-    private var playlistAdapter: PlayerPlaylistAdapter? = null
-
-    private lateinit var onPlaylistClickDebounce: (Playlist) -> Unit
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(currentTrack)
+    }
 
     override fun createBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentPlayerBinding {
         return FragmentPlayerBinding.inflate(inflater, container, false)
@@ -57,12 +57,13 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val analytics = FirebaseAnalytics.getInstance(requireContext())
+
         val track = requireArguments().getString(CURRENT_TRACK) ?: ""
         val type = object : TypeToken<Track>() {}.type
         currentTrack = Gson().fromJson(track, type) as Track
 
         val bottomSheetContainer = binding.playlistsBottomSheet
-
         val overlay = binding.overlay
 
         val bottomSheetBehavior = bottomSheetContainer?.let {
@@ -157,7 +158,7 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
         binding.trackName.text = currentTrack.trackName
         binding.artistName.text = currentTrack.artistName
         binding.playingTime.text = resources.getString(R.string.start_track)
-        binding.trackTime.text = currentTrack.trackTimeMillis
+        binding.trackTime.text = trackTimeMapper.getString(currentTrack.trackTimeMillis)
         binding.trackYear.text = currentTrack.releaseDate
         binding.trackGenre.text = currentTrack.primaryGenreName
         binding.trackCountry.text = currentTrack.country
@@ -175,9 +176,11 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
             bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        binding.buttonLike.setImageResource(
-            if (currentTrack.isFavorite) R.drawable.ic_like_on else R.drawable.ic_like_off
-        )
+        viewModel.observeStateFavourite().observe(viewLifecycleOwner) {
+            binding.buttonLike.setImageResource(
+                if (it) R.drawable.ic_like_on else R.drawable.ic_like_off
+            )
+        }
 
         viewModel.observeFavouriteState().observe(viewLifecycleOwner) { isFavourite ->
             currentTrack.isFavorite = isFavourite
@@ -195,13 +198,15 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
         }
 
         binding.buttonLike.setOnClickListener {
+            analytics.logEvent("Add_favourite_track") {
+                param("Name", currentTrack.trackName)
+            }
             viewModel.onFavoriteClicked(currentTrack)
         }
 
         binding.createNewPlaylist?.setOnClickListener {
             findNavController().navigate(R.id.action_playerFragment_to_fragmentCreatePlaylist)
         }
-
     }
 
     override fun onPause() {
@@ -222,9 +227,7 @@ class PlayerFragment(): BindingFragment<FragmentPlayerBinding>() {
         playlistAdapter?.playlists?.addAll(playlists)
         playlistAdapter?.notifyDataSetChanged()
     }
-    private fun showEmpty() {
-
-    }
+    private fun showEmpty() { }
 
     companion object{
 

@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/mark_54dp"
                 android:importantForAccessibility="no"
-                tool:src="@drawable/ic_like_off"
+                android:src="@drawable/ic_like_off"
                 app:layout_constraintStart_toEndOf="@id/buttonPlay"
                 app:layout_constraintTop_toBottomOf="@id/artistName"
                 app:layout_constraintEnd_toStartOf="@+id/end_guideline_24dp" />
@@ -207,22 +207,22 @@
                 style="@style/track_information"
                 android:layout_width="@dimen/mark_0dp"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/text_mark_13sp"
+                tool:text="5:34"
                 app:layout_constraintTop_toTopOf="@id/duration"
                 app:layout_constraintEnd_toStartOf="@id/right_guideline_16dp"
-                app:layout_constraintStart_toEndOf="@id/textsBarrier"
-                android:textSize="@dimen/text_mark_13sp"
-                tool:text="5:34"/>
+                app:layout_constraintStart_toEndOf="@id/textsBarrier" />
             <TextView
                 android:id="@+id/albumName"
                 app:layout_constraintTag="albumNameTag"
                 style="@style/track_information"
                 android:layout_width="@dimen/mark_0dp"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/text_mark_13sp"
+                tool:text="Yesterday (Remastered 2009)"
                 app:layout_constraintTop_toBottomOf="@id/trackTime"
                 app:layout_constraintEnd_toStartOf="@id/right_guideline_16dp"
-                app:layout_constraintStart_toEndOf="@id/textsBarrier"
-                android:textSize="@dimen/text_mark_13sp"
-                tool:text="Yesterday (Remastered 2009)"/>
+                app:layout_constraintStart_toEndOf="@id/textsBarrier"/>
             <TextView
                 android:id="@+id/trackYear"
                 style="@style/track_information"
@@ -309,19 +309,14 @@
             app:layout_constraintTop_toBottomOf="@id/divider"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/createNewPlaylist"
             app:layout_constraintTag="createNewPlaylist"
+            style="@style/buttonStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/mark_36dp"
             android:layout_marginTop="@dimen/mark_24dp"
-            android:backgroundTint="@color/black"
-            app:cornerRadius="@dimen/mark_54dp"
-            android:insetTop="@dimen/mark_0dp"
-            android:insetBottom="@dimen/mark_0dp"
             android:text="@string/new_playlist"
-            android:textSize="@dimen/text_mark_14sp"
-            android:textAllCaps="false"
             app:layout_constraintTop_toBottomOf="@id/textSheetBehavior"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
